@@ -1,0 +1,53 @@
+{
+  "name": "bert-server",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "serve": "node dist/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/errorhandler": "0.0.32",
+    "@types/express-xml-bodyparser": "^0.3.1",
+    "@types/jsonwebtoken": "^8.3.9",
+    "@types/mongoose": "^5.7.8",
+    "@types/node": "^12.12.34",
+    "@types/nodemailer": "^6.4.0",
+    "bcrypt": "^3.0.8",
+    "body-parser": "^1.19.0",
+    "coinbase-commerce-node": "^1.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "email-validator": "^2.0.4",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-xml-bodyparser": "^0.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mathjs": "^6.6.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.9.7",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.6",
+    "paypal-rest-sdk": "^1.8.1",
+    "querystring": "^0.2.0",
+    "redis": "^3.0.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "uuid": "^3.4.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/coinbase-commerce-node": "^1.0.3",
+    "@types/cors": "^2.8.6",
+    "@types/mathjs": "^6.0.5",
+    "@types/multer": "^1.4.2",
+    "@types/redis": "^2.8.17",
+    "@types/request": "^2.48.4",
+    "@types/request-promise": "^4.1.46",
+    "@types/uuid": "^3.4.8"
+  }
+}
