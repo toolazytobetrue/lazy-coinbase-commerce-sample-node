@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export type StockDocument = mongoose.Document & {
     rs3: {
@@ -13,6 +13,7 @@ export type StockDocument = mongoose.Document & {
     };
     dateCreated: Date;
     lastUpdated: Date;
+    paymentgateway: Schema.Types.ObjectId
 };
 
 const StockSchema = new mongoose.Schema({
@@ -26,6 +27,7 @@ const StockSchema = new mongoose.Schema({
         selling: { type: Number, required: true },
         units: { type: Number, required: true }
     },
+    paymentgateway: { type: Schema.Types.ObjectId, ref: 'PaymentGateway' },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,
 });

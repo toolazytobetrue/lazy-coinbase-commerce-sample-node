@@ -12,22 +12,17 @@ const utils_1 = require("../../util/utils");
 const stock_model_1 = require("../../models/sales/stock.model");
 exports.readAllStock = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        if (utils_1.isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
-            return res.status(400).send("Page number is missing");
-        }
-        const numberPerPage = 10;
-        const pageNumber = +req.query.pageNumber;
+        // if (isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+        //     return res.status(400).send("Page number is missing")
+        // }
+        // const numberPerPage = 10;
+        // const pageNumber = +req.query.pageNumber;
         const stocks = yield stock_model_1.Stock.find()
-            .sort({ dateCreated: -1 })
-            .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
-            .limit(numberPerPage);
-        const _stock = stocks.map(stock => exports.mapToStock(stock));
-        return res.status(200).json({
-            pageNumber,
-            numberPerPage,
-            totalCount: yield stock_model_1.Stock.find({}).countDocuments(),
-            stocks: _stock
-        });
+            .populate('paymentgateway')
+            .sort({ dateCreated: -1 });
+        // .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
+        // .limit(numberPerPage);
+        return res.status(200).json(stocks.map(stock => exports.mapToStock(stock)));
     }
     catch (err) {
         utils_1.logDetails('error', `Error reading orders: ${err}`);
@@ -61,7 +56,20 @@ exports.mapToStock = (stock) => {
             units: stock.osrs.units
         },
         dateCreated: stock.dateCreated,
-        lastUpdated: stock.lastUpdated
+        lastUpdated: stock.lastUpdated,
+        paymentgateway: exports.mapToPaymentGateway(stock.paymentgateway)
+    };
+};
+exports.mapToPaymentGateway = (payment) => {
+    return {
+        name: payment.name,
+        img: payment.img,
+        lastUpdated: payment.lastUpdated,
+        dateCreated: payment.dateCreated,
+        enabled: payment.enabled,
+        requiresLogin: payment.requiresLogin,
+        requiresVerification: payment.requiresVerification,
+        fees: payment.fees
     };
 };
 //# sourceMappingURL=read-stock.js.map

@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -47,20 +39,17 @@ exports.REDIS_CLIENT = redis_1.default.createClient(redisOptions);
 const app = express_1.default();
 app.use(express_xml_bodyparser_1.default());
 app.use(cors_1.default());
-const mongoUrl = secrets_1.prod ? "mongodb://bert:hassan123@localhost:27017,localhost:27018,localhost:27019/bert" : "mongodb://bert:hassan123@UKF:27017,UKF:27018,UKF:27019/bert";
+const mongoUrl = secrets_1.MONGODB_URI ? secrets_1.MONGODB_URI : '';
 exports.Charge = coinbase.resources.Charge;
 exports.Client = coinbase.Client;
 exports.Webhook = coinbase.Webhook;
 exports.Client.init(secrets_1.COINBASE_API_KEY);
 mongoose_1.default.set('useCreateIndex', true);
-mongoose_1.default.connect(mongoUrl, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    replicaSet: 'rs'
-}).then(() => __awaiter(this, void 0, void 0, function* () {
+mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true })
+    .then(() => {
     console.log('Successfully connected to mongodb');
     redis_users_1.setUserArray(exports.REDIS_CLIENT, '[]');
-}))
+})
     .catch((err) => {
     console.log(err);
     utils_1.logDetails('error', 'MongoDB connection error. Please make sure MongoDB is running. ' + err);
@@ -122,13 +111,10 @@ app.get('/api/coupon', security_1.isAuthorizedRootAdmin, couponController.readCo
 app.put('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponController.updateCoupon);
 app.delete('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponController.deleteCoupon);
 /**
- * Private readings API endpoints
- */
-app.get('/api/stock', security_1.isAuthorizedRootAdmin, stockController.readAllStock);
-/**
  * Public API endpoints
  */
-app.get('/api/paymentgateways', paymentGatewaysController.read);
+app.get('/api/stock', stockController.readAllStock);
+app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/stock/latest', stockController.readLatestStock);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
 /**

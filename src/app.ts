@@ -4,7 +4,7 @@ import express, { NextFunction } from 'express';
 import mongoose from 'mongoose';
 import * as userController from './controllers/user/user';
 import * as index from './controllers/index';
-import { COINBASE_API_KEY, prod, REDIS_PASSWORD } from './util/secrets';
+import { COINBASE_API_KEY, prod, REDIS_PASSWORD, MONGODB_URI } from './util/secrets';
 import { logDetails } from './util/utils';
 import * as coinbase from 'coinbase-commerce-node';
 import * as webhookCoinbase from './controllers/webhooks/coinbase';
@@ -30,20 +30,17 @@ app.use(xmlparser());
 
 app.use(cors());
 
-const mongoUrl: string = prod ? "mongodb://bert:hassan123@localhost:27017,localhost:27018,localhost:27019/bert" : "mongodb://bert:hassan123@UKF:27017,UKF:27018,UKF:27019/bert";
+const mongoUrl: string = MONGODB_URI ? MONGODB_URI : '';
 export const Charge = coinbase.resources.Charge;
 export const Client = coinbase.Client;
 export const Webhook = coinbase.Webhook;
 Client.init(COINBASE_API_KEY);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(mongoUrl, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    replicaSet: 'rs'
-}).then(async () => {
-    console.log('Successfully connected to mongodb');
-    setUserArray(REDIS_CLIENT, '[]');
-})
+mongoose.connect(mongoUrl, { useNewUrlParser: true })
+    .then(() => {
+        console.log('Successfully connected to mongodb');
+        setUserArray(REDIS_CLIENT, '[]');
+    })
     .catch((err: string) => {
         console.log(err)
         logDetails('error', 'MongoDB connection error. Please make sure MongoDB is running. ' + err);
@@ -129,15 +126,10 @@ app.delete('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.dele
 
 
 /**
- * Private readings API endpoints
- */
-app.get('/api/stock', isAuthorizedRootAdmin, stockController.readAllStock);
-
-
-/**
  * Public API endpoints
  */
-app.get('/api/paymentgateways', paymentGatewaysController.read);
+app.get('/api/stock', stockController.readAllStock);
+app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/stock/latest', stockController.readLatestStock);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
 
