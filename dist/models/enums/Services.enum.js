@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServicesEnum = void 0;
 var ServicesEnum;
 (function (ServicesEnum) {
     ServicesEnum[ServicesEnum["MINIGAMES"] = 1] = "MINIGAMES";

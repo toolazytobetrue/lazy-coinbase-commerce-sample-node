@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getTotalPrice = exports.getXpDetails = void 0;
 const utils_1 = require("../../util/utils");
 const xp_table_1 = require("./xp-table");
 const mathjs_1 = require("mathjs");

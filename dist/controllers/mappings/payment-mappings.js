@@ -1,34 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
-exports.getPaymentMap = (order, showDetails) => {
+exports.getPayment = void 0;
+exports.getPayment = (order) => {
+    var _a, _b, _c, _d;
     return {
-        gateway: showDetails ? `${order.paymentGateway.name}` : 'Hidden',
-        status: exports.getOrderStatus(order),
-        coinbase: showDetails ? {
-            identifier: order.payment && order.payment.coinbase && order.payment.coinbase.identifier ? order.payment.coinbase.identifier : 'N/A',
-            code: order.payment && order.payment.coinbase && order.payment.coinbase.code ? order.payment.coinbase.code : 'N/A',
-            history: exports.getOrderHistory(order),
-            payments: exports.getOrderPayments(order)
-        } : null
+        coinbase: {
+            identifier: (_a = order.payment.coinbase) === null || _a === void 0 ? void 0 : _a.identifier,
+            code: (_b = order.payment.coinbase) === null || _b === void 0 ? void 0 : _b.code,
+            timeline: (_c = order.payment.coinbase) === null || _c === void 0 ? void 0 : _c.timeline,
+            payments: (_d = order.payment.coinbase) === null || _d === void 0 ? void 0 : _d.payments
+        }
     };
-};
-exports.getOrderStatus = (order) => {
-    if (order.paymentGateway.name === 'Coinbase' && order.payment && order.payment.coinbase && order.payment.coinbase.timeline && order.payment.coinbase.timeline.length > 0) {
-        return order.payment.coinbase.timeline[order.payment.coinbase.timeline.length - 1].status;
-    }
-    return OrderStatus_enum_1.PaymentOrderStatus.INITIATED;
-};
-exports.getOrderHistory = (order) => {
-    if (order.paymentGateway.name === 'Coinbase' && order.payment && order.payment.coinbase && order.payment.coinbase.timeline && order.payment.coinbase.timeline.length > 0) {
-        return order.payment.coinbase.timeline;
-    }
-    return [];
-};
-exports.getOrderPayments = (order) => {
-    if (order.paymentGateway.name === 'Coinbase' && order.payment && order.payment.coinbase && order.payment.coinbase.payments && order.payment.coinbase.payments.length > 0) {
-        return order.payment.coinbase.payments;
-    }
-    return [];
 };
 //# sourceMappingURL=payment-mappings.js.map

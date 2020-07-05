@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteSkill = exports.updateSkill = exports.readSkills = exports.createSkill = void 0;
 const skill_create_1 = require("./skill-create");
-exports.createSkill = skill_create_1.createSkill;
+Object.defineProperty(exports, "createSkill", { enumerable: true, get: function () { return skill_create_1.createSkill; } });
 const skill_read_1 = require("./skill-read");
-exports.readSkills = skill_read_1.readSkills;
+Object.defineProperty(exports, "readSkills", { enumerable: true, get: function () { return skill_read_1.readSkills; } });
 const skill_update_1 = require("./skill-update");
-exports.updateSkill = skill_update_1.updateSkill;
+Object.defineProperty(exports, "updateSkill", { enumerable: true, get: function () { return skill_update_1.updateSkill; } });
 const skill_delete_1 = require("./skill-delete");
-exports.deleteSkill = skill_delete_1.deleteSkill;
+Object.defineProperty(exports, "deleteSkill", { enumerable: true, get: function () { return skill_delete_1.deleteSkill; } });
 //# sourceMappingURL=skill.js.map

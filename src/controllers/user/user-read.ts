@@ -11,11 +11,7 @@ export const readUsers = async (req: Request, res: Response, next: NextFunction)
             }
         }
 
-        if (isEmptyOrNull(req.query.groupId) || isNaN(+req.query.groupId) || !Number.isInteger(+req.query.groupId)) {
-            return res.status(400).send("Group ID is missing")
-        }
-
-        let filter = +req.query.groupId === -1 ? {} : { groupId: +req.query.groupId };
+        let filter = {};
         const numberPerPage = 10;
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : null;
         if (!isEmptyOrNull(req.query.filterBy) && !isEmptyOrNull(req.query.filter)) {

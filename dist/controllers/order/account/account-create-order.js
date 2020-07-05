@@ -1,19 +1,22 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createAccountOrder = void 0;
 const utils_1 = require("../../../util/utils");
 const payment_gateway_model_1 = require("../../../models/entities/payment-gateway.model");
-const create_transaction_order_account_1 = require("../../../api/order/create_transaction_order_account");
+// import { transactionCreateAccountOrder } from '../../../api/order/create_transaction_order_account';
 const account_model_1 = require("../../../models/sales/account.model");
 const coupon_model_1 = require("../../../models/sales/coupon.model");
-exports.createAccountOrder = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+const create_account_order_1 = require("../../../api/order/create_account_order");
+exports.createAccountOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
         const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
@@ -51,7 +54,7 @@ exports.createAccountOrder = (req, res, next) => __awaiter(this, void 0, void 0,
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const genericTransaction = yield create_transaction_order_account_1.transactionCreateAccountOrder(paymentGateway, account, userId, coupon, userIpAddress);
+        const genericTransaction = yield create_account_order_1.transactionCreateAccountOrder(paymentGateway, account, userId, coupon, userIpAddress);
         return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
     }
     catch (err) {

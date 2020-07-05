@@ -2,7 +2,7 @@ import { CreateCharge } from "coinbase-commerce-node";
 import { getOrderUrl } from "../../util/utils";
 import { Charge } from "../../app";
 
-export const createCoinbaseInvoice = async (orderId: string, totalAmount: number, name: string, description: string) => {
+export const createCoinbaseInvoice = async (orderId: string, totalAmount: number, name: string, description: string): Promise<{ id: string, code: string, hosted_url: string }> => {
     try {
         let chargeData: CreateCharge = {
             'name': name,

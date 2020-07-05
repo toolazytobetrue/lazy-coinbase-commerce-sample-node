@@ -1,16 +1,18 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.setUserArray = exports.clearUserArray = exports.getCacheUserToken = exports.getCacheUsers = exports.removeCacheUser = exports.setUserToken = void 0;
 const utils_1 = require("../util/utils");
-exports.setUserToken = (redisClient, userId, token) => __awaiter(this, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+exports.setUserToken = (redisClient, userId, token) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         const usersCache = yield exports.getCacheUsers(redisClient);
         const index = usersCache.findIndex((user) => user.userId === userId);
         const payload = {
@@ -27,15 +29,15 @@ exports.setUserToken = (redisClient, userId, token) => __awaiter(this, void 0, v
         return resolve(`Successfully set new array (for element): users`);
     }));
 });
-exports.removeCacheUser = (redisClient, userId) => __awaiter(this, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+exports.removeCacheUser = (redisClient, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         const _elementsCache = yield exports.getCacheUsers(redisClient);
         const elementsCache = _elementsCache.filter((element) => element.userId !== userId);
         yield exports.setUserArray(redisClient, JSON.stringify(elementsCache));
         return resolve(`Successfully set new array users's cache`);
     }));
 });
-exports.getCacheUsers = (redisClient) => __awaiter(this, void 0, void 0, function* () {
+exports.getCacheUsers = (redisClient) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         redisClient.get('users', (err, value) => {
             if (err) {
@@ -50,7 +52,7 @@ exports.getCacheUsers = (redisClient) => __awaiter(this, void 0, void 0, functio
         });
     });
 });
-exports.getCacheUserToken = (redisClient, token) => __awaiter(this, void 0, void 0, function* () {
+exports.getCacheUserToken = (redisClient, token) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         redisClient.get('users', (err, value) => {
             if (err) {
@@ -67,7 +69,7 @@ exports.getCacheUserToken = (redisClient, token) => __awaiter(this, void 0, void
         });
     });
 });
-exports.clearUserArray = (redisClient) => __awaiter(this, void 0, void 0, function* () {
+exports.clearUserArray = (redisClient) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         redisClient.set('users', '', (err, value) => {
             if (err) {
@@ -77,7 +79,7 @@ exports.clearUserArray = (redisClient) => __awaiter(this, void 0, void 0, functi
         });
     });
 });
-exports.setUserArray = (redisClient, value) => __awaiter(this, void 0, void 0, function* () {
+exports.setUserArray = (redisClient, value) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         redisClient.set('users', value, (err, value) => {
             if (err) {

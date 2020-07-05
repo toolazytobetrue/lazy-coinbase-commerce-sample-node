@@ -5,6 +5,8 @@ import { readOrders, readOrdersByCalendar } from "./orders-read";
 import { createServicesOrder } from "./services/services-create-order";
 import { readOrder } from "./order-read";
 import { requestOrder } from "./order-request";
+import { readGoldOrders } from "./gold/gold-read-orders";
+import { readAccountOrders } from "./account/account-read-orders";
 
 export {
     createGoldOrder,
@@ -14,5 +16,7 @@ export {
     readOrders,
     readOrdersByCalendar,
     updateOrder,
-    requestOrder
+    requestOrder,
+    readGoldOrders,
+    readAccountOrders
 }

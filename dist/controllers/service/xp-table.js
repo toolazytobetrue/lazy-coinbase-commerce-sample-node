@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.XP_TABLE = void 0;
 exports.XP_TABLE = [
     {
         "level": 1,

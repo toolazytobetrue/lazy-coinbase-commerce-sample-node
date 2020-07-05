@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Account = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const AccountSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true },
-    stats: [String],
-    points: [String],
+    description: { type: String, required: false },
+    img: { type: String, required: true },
     price: { type: Number, required: true },
     sold: { type: Boolean, required: true },
     dateCreated: { type: Date, required: true },

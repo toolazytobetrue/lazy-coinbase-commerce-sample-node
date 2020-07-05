@@ -1,20 +1,21 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.webhookCoinbase = void 0;
 const utils_1 = require("../../util/utils");
 const app_1 = require("../../app");
 const secrets_1 = require("../../util/secrets");
 const order_model_1 = require("../../models/order/order.model");
 const stock_model_1 = require("../../models/sales/stock.model");
-const account_model_1 = require("../../models/sales/account.model");
-exports.webhookCoinbase = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.webhookCoinbase = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const headers = req.headers['x-cc-webhook-signature'];
         app_1.Webhook.verifySigHeader(JSON.stringify(req.body), headers, secrets_1.COINBASE_WEBHOOK_SECRET);
@@ -47,25 +48,25 @@ exports.webhookCoinbase = (req, res, next) => __awaiter(this, void 0, void 0, fu
                     if (order.gold) {
                         const lastStock = yield stock_model_1.Stock.findOne().sort({ dateCreated: -1 });
                         if (lastStock) {
-                            if (order.gold.type === 'RS3') {
-                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
-                            }
-                            if (order.gold.type === 'OSRS') {
+                            if (order.gold.server === 1) {
                                 lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
                             }
+                            else {
+                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                            }
                         }
                     }
-                    if (order.account) {
-                        const account = order.account;
-                        const accounts = yield account_model_1.Account.find({ sold: false });
-                        const found = accounts.find(_ => `${_._id}` === `${account._id}`);
-                        if (found) {
-                            found.sold = true;
-                            order.account.sold = true;
-                            yield found.save();
-                            yield order.account.save();
-                        }
-                    }
+                    // if (order.account) {
+                    //     const account = order.account;
+                    //     const accounts = await Account.find({ sold: false });
+                    //     const found = accounts.find(_ => `${_._id}` === `${account._id}`);
+                    //     if (found) {
+                    //         found.sold = true;
+                    //         order.account.sold = true;
+                    //         await found.save();
+                    //         await order.account.save();
+                    //     }
+                    // }
                 }
                 yield order.save();
                 utils_1.logDetails('debug', `[COINBASE][UPDATE] Deposit: ${transaction.event.data.id} - ${lastTimeline.status}`);

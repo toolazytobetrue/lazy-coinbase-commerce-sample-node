@@ -34,8 +34,6 @@ export async function transactionCreateUser(userPermission: USER_PERMISSIONS = U
                     lastUpdated: new Date(),
                     firstName,
                     lastName,
-                    discord,
-                    skype,
                     userEmails: [
                         {
                             dateCreated: new Date(),

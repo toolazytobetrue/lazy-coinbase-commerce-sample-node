@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { isEmptyOrNull, logDetails, getAuthorizedUser } from '../../util/utils';
 import { Order } from '../../models/order/order.model';
-import { mapToGoldOrderDocument } from '../mappings/gold-mappings';
-import { mapToAccountOrderDocument } from '../mappings/account-mappings';
-import { mapToServicesOrderDocument } from '../mappings/services.mappings';
+// import { mapToAccountOrderDocument } from '../mappings/account-mappings';
+// import { mapToServicesOrderDocument } from '../mappings/services.mappings';
 
 export const readOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -26,13 +25,13 @@ export const readOrder = async (req: Request, res: Response, next: NextFunction)
         }
 
         let _order = null;
-        if (order.gold) {
-            _order = mapToGoldOrderDocument(order);
-        } else if (order.account) {
-            _order = mapToAccountOrderDocument(order);
-        } else {
-            _order = mapToServicesOrderDocument(order, authorizedUser.groupId !== 3);
-        }
+        // if (order.gold) {
+        //     _order = mapToGoldOrderDocument(order);
+        // } else if (order.account) {
+        //     _order = mapToAccountOrderDocument(order);
+        // } else {
+        //     _order = mapToServicesOrderDocument(order, authorizedUser.groupId !== 3);
+        // }
         return res.status(200).json(_order);
 
     } catch (err) {

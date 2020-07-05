@@ -1,8 +1,7 @@
-import { readAllStock, readLatestStock } from "./read-stock";
-import { createStock } from "./create-stock";
+import { readLatestStock } from "./read-stock";
+import { updateStock } from "./create-stock";
 
 export {
-    createStock,
-    readAllStock,
+    updateStock,
     readLatestStock
 }

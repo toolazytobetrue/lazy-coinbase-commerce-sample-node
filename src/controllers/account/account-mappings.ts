@@ -4,8 +4,8 @@ export const mapToAccountDocument = (account: AccountDocument) => {
     return {
         accountId: account._id,
         title: account.title,
-        stats: account.stats,
-        points: account.points,
+        description: account.description,
+        img: account.img,
         price: account.price,
         sold: account.sold,
         dateCreated: account.dateCreated,

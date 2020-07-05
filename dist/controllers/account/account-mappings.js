@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.mapToAccountDocument = void 0;
 exports.mapToAccountDocument = (account) => {
     return {
         accountId: account._id,
         title: account.title,
-        stats: account.stats,
-        points: account.points,
+        description: account.description,
+        img: account.img,
         price: account.price,
         sold: account.sold,
         dateCreated: account.dateCreated,

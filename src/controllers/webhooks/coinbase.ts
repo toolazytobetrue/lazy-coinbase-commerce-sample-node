@@ -41,26 +41,25 @@ export const webhookCoinbase = async (req: Request, res: any, next: NextFunction
                     if (order.gold) {
                         const lastStock = await Stock.findOne().sort({ dateCreated: -1 });
                         if (lastStock) {
-                            if (order.gold.type === 'RS3') {
-                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
-                            }
-                            if (order.gold.type === 'OSRS') {
+                            if (order.gold.server === 1) {
                                 lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
+                            } else {
+                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
                             }
                         }
                     }
 
-                    if (order.account) {
-                        const account = order.account;
-                        const accounts = await Account.find({ sold: false });
-                        const found = accounts.find(_ => `${_._id}` === `${account._id}`);
-                        if (found) {
-                            found.sold = true;
-                            order.account.sold = true;
-                            await found.save();
-                            await order.account.save();
-                        }
-                    }
+                    // if (order.account) {
+                    //     const account = order.account;
+                    //     const accounts = await Account.find({ sold: false });
+                    //     const found = accounts.find(_ => `${_._id}` === `${account._id}`);
+                    //     if (found) {
+                    //         found.sold = true;
+                    //         order.account.sold = true;
+                    //         await found.save();
+                    //         await order.account.save();
+                    //     }
+                    // }
                 }
                 await order.save();
                 logDetails('debug', `[COINBASE][UPDATE] Deposit: ${transaction.event.data.id} - ${lastTimeline.status}`);

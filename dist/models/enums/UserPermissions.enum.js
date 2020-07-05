@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.USER_PERMISSIONS = void 0;
 var USER_PERMISSIONS;
 (function (USER_PERMISSIONS) {
     USER_PERMISSIONS[USER_PERMISSIONS["ADMIN"] = 1] = "ADMIN";

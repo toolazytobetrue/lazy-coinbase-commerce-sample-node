@@ -15,7 +15,6 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true })
             {
                 name: 'crypto',
                 requiresLogin: false,
-                requiresVerification: false,
                 img: 'crypto.png',
                 enabled: true,
                 fees: 0
@@ -34,7 +33,6 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true })
                     dateCreated: new Date(),
                     enabled: p.enabled,
                     requiresLogin: p.requiresLogin,
-                    requiresVerification: p.requiresVerification,
                     fees: p.fees
                 }).save();
             } else {

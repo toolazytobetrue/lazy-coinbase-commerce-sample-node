@@ -7,7 +7,6 @@ export type PaymentGatewayDocument = mongoose.Document & {
     dateCreated: Date;
     enabled: boolean;
     requiresLogin: boolean;
-    requiresVerification: boolean;
     fees: number;
 };
 
@@ -18,7 +17,6 @@ const paymentGatewaySchema = new mongoose.Schema({
     dateCreated: Date,
     enabled: { type: Boolean, required: true },
     requiresLogin: { type: Boolean, required: true },
-    requiresVerification: { type: Boolean, required: true },
     fees: { type: Number, required: true }
 });
 

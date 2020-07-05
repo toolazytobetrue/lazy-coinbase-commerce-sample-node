@@ -10,14 +10,11 @@ export type UserDocument = mongoose.Document & {
     password: string;
     firstName: string;
     lastName: string;
-    discord?: string;
-    skype?: string;
     dateCreated: Date;
     lastUpdated: Date;
     userEmails: UserEmailDocument[];
     userLogins: UserLoginDocument[];
     passwordResets: PasswordResetDocument[];
-    orders: mongoose.Schema.Types.ObjectId[]
 };
 
 const userSchema = new mongoose.Schema({
@@ -26,14 +23,11 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    discord: { type: String, required: false },
-    skype: { type: String, required: false },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,
     userEmails: [UserEmailSchema],
     userLogins: [UserLoginSchema],
     passwordResets: [PasswordResetSchema],
-    orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }]
 });
 
 /**

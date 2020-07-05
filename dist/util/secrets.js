@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WEBSITE_EMAIL_PASSWORD = exports.WEBSITE_EMAIL = exports.WEBSITE_SUPPORT_NAME = exports.WEBSITE_NAME = exports.COINBASE_WEBHOOK_SECRET = exports.COINBASE_API_KEY = exports.REDIS_PASSWORD = exports.MIN_SERVICES_ORDER = exports.MIN_GOLD_ORDER = exports.G2A_API_HASH = exports.G2A_API_SECRET = exports.G2A_REST_URL = exports.G2A_CHECKOUT_URL = exports.IPDATA_API_KEY = exports.NUMVERIFY_API_KEY = exports.CURRENCY_LAYER_API = exports.MERCHANT_EMAIL = exports.URL_ON_SUCCESS = exports.URL_ON_FAIL = exports.URL_MAIN = exports.MONGODB_URI = exports.prod = exports.ENVIRONMENT = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
 const logger_1 = __importDefault(require("./logger"));

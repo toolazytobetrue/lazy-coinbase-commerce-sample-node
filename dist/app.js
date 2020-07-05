@@ -1,15 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Webhook = exports.Client = exports.Charge = exports.REDIS_CLIENT = void 0;
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -33,7 +46,7 @@ const redis_1 = __importDefault(require("redis"));
 const security_1 = require("./util/security");
 const redis_users_1 = require("./api/redis-users");
 const redisOptions = {
-    password: secrets_1.REDIS_PASSWORD
+// password: REDIS_PASSWORD
 };
 exports.REDIS_CLIENT = redis_1.default.createClient(redisOptions);
 const app = express_1.default();
@@ -78,10 +91,12 @@ app.put('/api/user/:userId/group', security_1.isAuthorizedRootAdmin, userControl
 /**
  * Order
  */
-app.post('/api/order/gold', security_1.isAuthorized, orderController.createGoldOrder);
-app.post('/api/order/account', security_1.isAuthorized, orderController.createAccountOrder);
+app.post('/api/order/gold', orderController.createGoldOrder);
+app.post('/api/order/account', orderController.createAccountOrder);
 app.post('/api/order/services', security_1.isAuthorized, orderController.createServicesOrder);
 app.get('/api/order', security_1.isAuthorizedBelowAdmin, orderController.readOrders);
+app.get('/api/order/gold', security_1.isAuthorizedBelowAdmin, orderController.readGoldOrders);
+app.get('/api/order/account', security_1.isAuthorizedBelowAdmin, orderController.readAccountOrders);
 app.get('/api/order/calendar', security_1.isAuthorizedBelowAdmin, orderController.readOrdersByCalendar);
 app.get('/api/order/:orderId', security_1.isAuthorizedBelowAdmin, orderController.readOrder);
 app.put('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderController.updateOrder);
@@ -89,11 +104,12 @@ app.post('/api/order/:orderId/request', security_1.isAuthorizedBelowAdmin, order
 /**
  * Entities Management
  */
-app.post('/api/stock', security_1.isAuthorizedRootAdmin, stockController.createStock);
+app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateStock);
 app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
 app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
 app.get('/api/account', accountController.readAccounts);
+app.get('/api/account/available', accountController.readAvailableAccounts);
 app.get('/api/service', serviceController.readServices);
 app.get('/api/skill', skillController.readSkills);
 app.put('/api/account/:accountId', security_1.isAuthorizedRootAdmin, accountController.updateAccount);
@@ -113,9 +129,8 @@ app.delete('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponCont
 /**
  * Public API endpoints
  */
-app.get('/api/stock', stockController.readAllStock);
+app.get('/api/stock', stockController.readLatestStock);
 app.get('/api/paymentgateway', paymentGatewaysController.read);
-app.get('/api/stock/latest', stockController.readLatestStock);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
 /**
  * Payment Webhooks API endpoints

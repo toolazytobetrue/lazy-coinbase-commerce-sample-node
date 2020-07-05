@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { isEmptyOrNull, getAuthorizedUser, logDetails } from '../../util/utils';
 import { USER_PERMISSIONS } from '../../models/enums/UserPermissions.enum';
 import { Order, OrderDocument } from '../../models/order/order.model';
-import { mapToGoldOrderDocument } from '../mappings/gold-mappings';
-import { mapToAccountOrderDocument } from '../mappings/account-mappings';
-import { mapToServicesOrderDocument, mapToServicesOrderCalendarDocumentGeneric } from '../mappings/services.mappings';
+import { mapToOrderDocument } from '../mappings/gold-mappings';
+// import { mapToAccountOrderDocument } from '../mappings/account-mappings';
+// import { mapToServicesOrderDocument, mapToServicesOrderCalendarDocumentGeneric } from '../mappings/services.mappings';
 
 export const readOrders = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -41,7 +41,7 @@ export const readOrders = async (req: Request, res: Response, next: NextFunction
                     .populate('user')
                     .populate('worker')
                     .populate('requests.worker')
-                orders = _orders.map(order => mapToServicesOrderDocument(order, authorizedUser.groupId !== 3));
+                // orders = _orders.map(order => mapToServicesOrderDocument(order, authorizedUser.groupId !== 3));
                 break;
             case 'gold':
                 filter = { gold: { $ne: undefined } };
@@ -50,9 +50,9 @@ export const readOrders = async (req: Request, res: Response, next: NextFunction
                     .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
                     .limit(numberPerPage)
                     .populate('user')
-                    .populate('worker');
+                // .populate('worker');
 
-                orders = _orders.map(order => mapToGoldOrderDocument(order));
+                // orders = _orders.map(order => mapToOrderDocument(order));
                 break;
             case 'account':
                 filter = { account: { $ne: undefined } };
@@ -63,14 +63,14 @@ export const readOrders = async (req: Request, res: Response, next: NextFunction
                     .populate('user')
                     .populate('worker');
 
-                orders = _orders.map(order => mapToAccountOrderDocument(order));
+                // orders = _orders.map(order => mapToAccountOrderDocument(order));
                 break;
         }
         return res.status(200).json({
             pageNumber,
             numberPerPage,
             totalCount: await Order.find(filter).countDocuments(),
-            orders: orders
+            orders: _orders
         });
     } catch (err) {
         logDetails('error', `Error reading orders: ${err}`);
@@ -117,8 +117,8 @@ export const readOrdersByCalendar = async (req: Request, res: Response, next: Ne
             ]
 
         })
-        let orders = _orders.map(order => mapToServicesOrderCalendarDocumentGeneric(order, false));
-        return res.status(200).json(orders);
+        // let orders = _orders.map(order => mapToServicesOrderCalendarDocumentGeneric(order, false));
+        // return res.status(200).json(orders);
     } catch (err) {
         logDetails('error', `Error reading orders: ${err}`);
         return res.status(500).send('Failed to read orders');

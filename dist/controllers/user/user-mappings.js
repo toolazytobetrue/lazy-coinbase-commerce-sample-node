@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.mapToUserDocument = void 0;
 function mapToUserDocument(user, displayDetails = false) {
     return {
         userId: user._id,
@@ -7,13 +8,10 @@ function mapToUserDocument(user, displayDetails = false) {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        discord: user.discord,
-        skype: user.skype,
         dateCreated: user.dateCreated,
         lastUpdated: user.lastUpdated,
         userEmails: displayDetails ? user.userEmails : [],
-        userLogins: displayDetails ? user.userLogins : [],
-        orders: displayDetails ? user.orders : []
+        userLogins: displayDetails ? user.userLogins : []
     };
 }
 exports.mapToUserDocument = mapToUserDocument;

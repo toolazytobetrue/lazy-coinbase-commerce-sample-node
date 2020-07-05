@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { isEmptyOrNull, logDetails, getAuthorizedUser } from '../../../util/utils';
 import { PaymentGateway } from '../../../models/entities/payment-gateway.model';
-import { transactionCreateAccountOrder } from '../../../api/order/create_transaction_order_account';
+// import { transactionCreateAccountOrder } from '../../../api/order/create_transaction_order_account';
 import { Account } from '../../../models/sales/account.model';
 import { CouponDocument, Coupon } from '../../../models/sales/coupon.model';
+import { transactionCreateAccountOrder } from '../../../api/order/create_account_order';
 
 export const createAccountOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {

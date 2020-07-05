@@ -27,7 +27,7 @@ const StockSchema = new mongoose.Schema({
         selling: { type: Number, required: true },
         units: { type: Number, required: true }
     },
-    paymentgateway: { type: Schema.Types.ObjectId, ref: 'PaymentGateway' },
+    paymentgateway: { required: true, type: Schema.Types.ObjectId, ref: 'PaymentGateway' },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,
 });

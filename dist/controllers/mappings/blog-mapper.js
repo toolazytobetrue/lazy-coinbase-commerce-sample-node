@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.maptoBlogDocument = void 0;
 const services_mappings_1 = require("./services.mappings");
 exports.maptoBlogDocument = (blog) => {
     return {

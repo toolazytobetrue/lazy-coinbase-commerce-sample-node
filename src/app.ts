@@ -21,7 +21,7 @@ import redis from 'redis';
 import { isAuthorizedRootAdmin, isAuthorized, isAuthorizedBelowAdmin } from './util/security';
 import { setUserArray } from './api/redis-users';
 const redisOptions = {
-    password: REDIS_PASSWORD
+    // password: REDIS_PASSWORD
 };
 export const REDIS_CLIENT = redis.createClient(redisOptions);
 const app = express();
@@ -80,11 +80,16 @@ app.put('/api/user/:userId/group', isAuthorizedRootAdmin, userController.updateU
  * Order
  */
 
-app.post('/api/order/gold', isAuthorized, orderController.createGoldOrder);
-app.post('/api/order/account', isAuthorized, orderController.createAccountOrder);
+app.post('/api/order/gold', orderController.createGoldOrder);
+app.post('/api/order/account', orderController.createAccountOrder);
+
 app.post('/api/order/services', isAuthorized, orderController.createServicesOrder);
 
 app.get('/api/order', isAuthorizedBelowAdmin, orderController.readOrders);
+
+app.get('/api/order/gold', isAuthorizedBelowAdmin, orderController.readGoldOrders);
+app.get('/api/order/account', isAuthorizedBelowAdmin, orderController.readAccountOrders);
+
 app.get('/api/order/calendar', isAuthorizedBelowAdmin, orderController.readOrdersByCalendar);
 
 app.get('/api/order/:orderId', isAuthorizedBelowAdmin, orderController.readOrder);
@@ -97,12 +102,16 @@ app.post('/api/order/:orderId/request', isAuthorizedBelowAdmin, orderController.
  * Entities Management
  */
 
-app.post('/api/stock', isAuthorizedRootAdmin, stockController.createStock);
+app.put('/api/stock', isAuthorizedRootAdmin, stockController.updateStock);
+
 app.post('/api/account', isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/service', isAuthorizedRootAdmin, serviceController.createService);
 app.post('/api/skill', isAuthorizedRootAdmin, skillController.createSkill);
 
 app.get('/api/account', accountController.readAccounts);
+app.get('/api/account/available', accountController.readAvailableAccounts);
+
+
 app.get('/api/service', serviceController.readServices);
 app.get('/api/skill', skillController.readSkills);
 
@@ -128,9 +137,9 @@ app.delete('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.dele
 /**
  * Public API endpoints
  */
-app.get('/api/stock', stockController.readAllStock);
+app.get('/api/stock', stockController.readLatestStock);
+
 app.get('/api/paymentgateway', paymentGatewaysController.read);
-app.get('/api/stock/latest', stockController.readLatestStock);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
 
 /**

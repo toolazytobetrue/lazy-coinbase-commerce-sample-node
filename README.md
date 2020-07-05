@@ -6,7 +6,7 @@ sudo /etc/init.d/nginx restart
 
 mongo
 use bert
-db.createUser( { user: "bert", pwd: "hassan123", roles: [ "dbOwner" ] } )
+db.createUser( { user: "bert", pwd: "aC9sQ3415bPnq4sjz93QEBTR3EFVEb3G", roles: [ "dbOwner" ] } )
 show dbs
 show collections
 db.dropDatabase()

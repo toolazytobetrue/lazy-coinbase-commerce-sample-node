@@ -1,44 +1,41 @@
-import { OrderDocument } from "../../models/order/order.model";
-import { GoldDocument } from "../../models/sales/gold.model";
-import { mapToStock } from "../stock/read-stock";
-import { getPaymentMap } from "./payment-mappings";
+import { OrderDocument, goldDocument } from "../../models/order/order.model";
 import { maptoCouponDocument } from "./coupon-mapper";
 import { getOrderUser } from "./services.mappings";
+import { round } from "mathjs";
+import { mapToStock, mapToPaymentGateway } from "./all";
+import { getPayment } from "./payment-mappings";
 
-export const mapToGoldOrderDocument = (order: OrderDocument) => {
-    const {
-        amount,
-        amountWithDiscount,
-        delivered,
-        rsn,
-        status,
-        lastUpdated,
-        dateCreated,
-        coupon,
-        ipAddress
-    } = order;
+export const mapToOrderDocument = (order: OrderDocument) => {
+    const amount = +round(order.gold ? order.gold.units * (order.gold.server === 1 ? order.gold.stock.osrs.selling : order.gold.stock.rs3.selling, 2) : 0);
+    const percentage = 100 - (order.coupon ? order.coupon.amount : 0);
+    const ratio = percentage / 100;
+    const amountWithDiscount = +round(amount * ratio, 2);
+
+
     return {
         orderId: `${order._id}`,
-        delivered,
-        rsn,
-        lastUpdated,
-        dateCreated,
         amount,
         amountWithDiscount,
-        ipAddress: ipAddress ? ipAddress : 'N/A',
-        status,
-        gold: order.gold ? mapToOrderGoldDocument(order.gold) : null,
-        payment: getPaymentMap(order, true),
-        coupon: coupon ? maptoCouponDocument(coupon) : null,
-        user: getOrderUser(order.user),
+        uuid: order.uuid,
+        delivered: order.delivered,
+        lastUpdated: order.lastUpdated,
+        dateCreated: order.dateCreated,
+        paymentGateway: mapToPaymentGateway(order.paymentGateway),
+        status: order.status,
+        payment: getPayment(order),
+        user: order.user ? getOrderUser(order.user) : null,
+        coupon: order.coupon ? maptoCouponDocument(order.coupon) : null,
+        ipAddress: order.ipAddress ? order.ipAddress : 'N/A',
+        gold: order.gold ? mapToOrderGoldDocument(order.gold) : null
     }
 }
 
-export const mapToOrderGoldDocument = (goldDoc: GoldDocument) => {
+export const mapToOrderGoldDocument = (goldDoc: goldDocument) => {
     return {
         goldOrderId: `${goldDoc._id}`,
         units: goldDoc.units,
-        type: goldDoc.type,
-        stockAtTheTime: mapToStock(goldDoc.stock)
+        server: goldDoc.server,
+        stock: mapToStock(goldDoc.stock),
+        rsn: goldDoc.rsn
     }
 }

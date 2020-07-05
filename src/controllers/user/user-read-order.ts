@@ -49,7 +49,7 @@ export const getUserOrders = async (req: Request, res: Response, next: NextFunct
             // }
             return {
                 orderId: o._id,
-                amount: o.amount,
+                // amount: o.amount,
                 description
             }
         })

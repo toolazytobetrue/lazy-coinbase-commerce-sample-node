@@ -3,18 +3,14 @@ import { logDetails, isEmptyOrNull, getAuthorizedUser } from '../../../util/util
 import { PaymentGateway } from '../../../models/entities/payment-gateway.model';
 import { Stock } from '../../../models/sales/stock.model';
 import { round } from 'mathjs';
-import { transactionCreateGoldOrder } from '../../../api/order/create_transaction_order_gold';
 import { MIN_GOLD_ORDER } from '../../../util/secrets';
 import { Coupon, CouponDocument } from '../../../models/sales/coupon.model';
+import { transactionCreateGoldOrder } from '../../../api/order/create_gold_order';
 
 export const createGoldOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userIpAddress: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        const authorizedUser: any = getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
-        }
-        const userId = authorizedUser ? authorizedUser.id : null
+        let userId = null;
         if (isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
         }
@@ -24,6 +20,14 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
             return res.status(404).send("Payment gateway not found");
         }
 
+        if (paymentGateway.requiresLogin) {
+            const authorizedUser: any = getAuthorizedUser(req, res, next);
+            if (authorizedUser === null) {
+                return res.status(401).send("Unauthorized access");
+            }
+            userId = authorizedUser.id;
+        }
+
         const latestStock = await Stock.findOne().sort({ dateCreated: -1 });
         if (isEmptyOrNull(req.body.units) || isNaN(+req.body.units) || +req.body.units <= 0) {
             return res.status(400).send("Amount to purchase is invalid");
@@ -31,7 +35,7 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
         if (isEmptyOrNull(req.body.type)) {
             return res.status(400).send("Stock type is missing");
         }
-        if (req.body.type !== 'RS3' && req.body.type !== 'OSRS') {
+        if (req.body.type !== 'runescape3' && req.body.type !== 'oldschool') {
             return res.status(400).send("Stock type is wrong");
         }
         if (isEmptyOrNull(req.body.rsn)) {
@@ -46,12 +50,12 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
 
         let units = +round(req.body.units, 2);
         let unitPrice = 0;
-        if (req.body.type === 'RS3') {
+        if (req.body.type === 'runescape3') {
             if (latestStock.rs3.units < +req.body.units || latestStock.rs3.units <= 0) {
                 return res.status(400).send("Cannot order more than available in stock");
             }
             unitPrice = latestStock.rs3.selling;
-        } else if (req.body.type === 'OSRS') {
+        } else if (req.body.type === 'oldschool') {
             if (latestStock.osrs.units < +req.body.units || latestStock.osrs.units <= 0) {
                 return res.status(400).send("Cannot order more than available in stock");
             }
@@ -76,7 +80,7 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, userId, req.body.rsn, coupon, userIpAddress);
+        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, req.body.rsn, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     } catch (err) {
         logDetails('error', `Error creating an order ${err}`);

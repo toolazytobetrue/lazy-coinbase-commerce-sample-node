@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.maptoCouponDocument = void 0;
 exports.maptoCouponDocument = (coupon) => {
     return {
         couponId: coupon._id,

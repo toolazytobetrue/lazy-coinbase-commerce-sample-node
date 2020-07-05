@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 export type AccountDocument = mongoose.Document & {
     title: string;
-    stats: string[];
-    points: string[];
+    description?: string;
+    img: string;
     price: number;
     sold: boolean;
     dateCreated: Date;
@@ -12,8 +12,8 @@ export type AccountDocument = mongoose.Document & {
 
 const AccountSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    stats: [String],
-    points: [String],
+    description: { type: String, required: false },
+    img: { type: String, required: true },
     price: { type: Number, required: true },
     sold: { type: Boolean, required: true },
     dateCreated: { type: Date, required: true },

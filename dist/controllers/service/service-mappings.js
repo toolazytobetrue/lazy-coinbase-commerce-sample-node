@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.mapToServiceDocument = void 0;
 exports.mapToServiceDocument = (service) => {
     return {
         serviceId: service._id,

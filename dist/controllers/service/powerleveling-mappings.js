@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.mapToSkillRange = exports.mapToSkill = void 0;
 exports.mapToSkill = (skill) => {
     return {
         skillId: skill._id,

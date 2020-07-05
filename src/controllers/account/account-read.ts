@@ -38,3 +38,30 @@ export const readAccounts = async (req: Request, res: Response, next: NextFuncti
         return res.status(500).send('Something wrong happened');
     }
 };
+
+export const readAvailableAccounts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+            return res.status(400).send("Page number is missing")
+        }
+        const numberPerPage = 10;
+        const pageNumber = +req.query.pageNumber;
+
+        const query = { sold: false }
+        const accounts = await Account.find(query)
+            .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
+            .limit(numberPerPage)
+            .sort({ dateCreated: -1 });
+
+        const _accounts = accounts.map(user => mapToAccountDocument(user));
+        return res.status(200).send({
+            pageNumber,
+            numberPerPage,
+            totalCount: await Account.find(query).countDocuments(),
+            accounts: _accounts
+        });
+    } catch (err) {
+        logDetails('error', `Error while fetching accounts: ${err}`);
+        return res.status(500).send('Something wrong happened');
+    }
+};
