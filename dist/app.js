@@ -94,12 +94,13 @@ app.put('/api/user/:userId/group', security_1.isAuthorizedRootAdmin, userControl
 app.post('/api/order/gold', orderController.createGoldOrder);
 app.post('/api/order/account', orderController.createAccountOrder);
 app.post('/api/order/services', security_1.isAuthorized, orderController.createServicesOrder);
-app.get('/api/order', security_1.isAuthorizedBelowAdmin, orderController.readOrders);
+// app.get('/api/order', isAuthorizedBelowAdmin, orderController.readOrders);
 app.get('/api/order/gold', security_1.isAuthorizedBelowAdmin, orderController.readGoldOrders);
 app.get('/api/order/account', security_1.isAuthorizedBelowAdmin, orderController.readAccountOrders);
+app.get('/api/order/:orderId', orderController.readOrder);
+app.put('/api/order/:orderId/gold', security_1.isAuthorizedRootAdmin, orderController.updateGoldOrder);
+app.put('/api/order/:orderId/account', security_1.isAuthorizedRootAdmin, orderController.updateAccountOrder);
 app.get('/api/order/calendar', security_1.isAuthorizedBelowAdmin, orderController.readOrdersByCalendar);
-app.get('/api/order/:orderId', security_1.isAuthorizedBelowAdmin, orderController.readOrder);
-app.put('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderController.updateOrder);
 app.post('/api/order/:orderId/request', security_1.isAuthorizedBelowAdmin, orderController.requestOrder);
 /**
  * Entities Management
@@ -108,7 +109,7 @@ app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateSt
 app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
 app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
-app.get('/api/account', accountController.readAccounts);
+app.get('/api/account', security_1.isAuthorizedRootAdmin, accountController.readAccounts);
 app.get('/api/account/available', accountController.readAvailableAccounts);
 app.get('/api/service', serviceController.readServices);
 app.get('/api/skill', skillController.readSkills);

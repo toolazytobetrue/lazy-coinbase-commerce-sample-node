@@ -20,7 +20,6 @@ export const readAccountOrders = async (req: Request, res: Response, next: NextF
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
             .populate('user')
-            .populate('account')
 
         const orders = _orders.map(order => mapToOrderDocument(order));
 

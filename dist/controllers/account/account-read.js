@@ -12,24 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.readAvailableAccounts = exports.readAccounts = void 0;
 const utils_1 = require("../../util/utils");
 const account_model_1 = require("../../models/sales/account.model");
-const account_mappings_1 = require("./account-mappings");
+const account_mappings_1 = require("../mappings/account-mappings");
 exports.readAccounts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (utils_1.isEmptyOrNull(req.query.sold) || (req.query.sold !== 'false' && req.query.sold !== 'true' && req.query.sold !== 'all')) {
-            return res.status(400).send("Sold flag is missing");
-        }
         if (utils_1.isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
             return res.status(400).send("Page number is missing");
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
-        const sold = req.query.sold === 'true' ? true : false;
-        const user = utils_1.getAuthorizedUser(req, res, next);
-        let allAccounts = false;
-        if (user) {
-            allAccounts = user.groupId === 1 && req.query.sold === 'all';
-        }
-        const query = allAccounts ? {} : { sold: sold };
+        const query = {};
         const accounts = yield account_model_1.Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
@@ -54,7 +45,7 @@ exports.readAvailableAccounts = (req, res, next) => __awaiter(void 0, void 0, vo
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
-        const query = { sold: false };
+        const query = {};
         const accounts = yield account_model_1.Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)

@@ -19,13 +19,22 @@ const create_account_order_1 = require("../../../api/order/create_account_order"
 exports.createAccountOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
-        }
-        const userId = authorizedUser ? authorizedUser.id : null;
+        let userId = null;
         if (utils_1.isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
+        }
+        const paymentGateway = yield payment_gateway_model_1.PaymentGateway.findById(req.body.paymentGatewayId);
+        if (!paymentGateway) {
+            return res.status(404).send("Payment gateway not found");
+        }
+        const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
+        if (authorizedUser !== null) {
+            userId = authorizedUser.id;
+        }
+        if (paymentGateway.requiresLogin) {
+            if (authorizedUser === null) {
+                return res.status(401).send("Unauthorized access");
+            }
         }
         if (utils_1.isEmptyOrNull(req.body.accountId)) {
             return res.status(400).send("Account id is missing");
@@ -34,12 +43,8 @@ exports.createAccountOrder = (req, res, next) => __awaiter(void 0, void 0, void 
         if (!account) {
             return res.status(404).send("Account not found");
         }
-        if (account.sold) {
-            return res.status(400).send("Account already sold");
-        }
-        const paymentGateway = yield payment_gateway_model_1.PaymentGateway.findById(req.body.paymentGatewayId);
-        if (!paymentGateway) {
-            return res.status(404).send("Payment gateway not found");
+        if (account.stock === 0) {
+            return res.status(400).send("Account not available in stock");
         }
         let coupon;
         if (!utils_1.isEmptyOrNull(req.body.couponId)) {

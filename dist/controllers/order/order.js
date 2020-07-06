@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readAccountOrders = exports.readGoldOrders = exports.requestOrder = exports.updateOrder = exports.readOrdersByCalendar = exports.readOrders = exports.readOrder = exports.createServicesOrder = exports.createAccountOrder = exports.createGoldOrder = void 0;
+exports.readAccountOrders = exports.readGoldOrders = exports.requestOrder = exports.updateGoldOrder = exports.updateAccountOrder = exports.readOrdersByCalendar = exports.readOrders = exports.readOrder = exports.createServicesOrder = exports.createAccountOrder = exports.createGoldOrder = void 0;
 const gold_create_order_1 = require("./gold/gold-create-order");
 Object.defineProperty(exports, "createGoldOrder", { enumerable: true, get: function () { return gold_create_order_1.createGoldOrder; } });
-const order_update_1 = require("./order-update");
-Object.defineProperty(exports, "updateOrder", { enumerable: true, get: function () { return order_update_1.updateOrder; } });
 const account_create_order_1 = require("./account/account-create-order");
 Object.defineProperty(exports, "createAccountOrder", { enumerable: true, get: function () { return account_create_order_1.createAccountOrder; } });
 const orders_read_1 = require("./orders-read");
@@ -20,4 +18,8 @@ const gold_read_orders_1 = require("./gold/gold-read-orders");
 Object.defineProperty(exports, "readGoldOrders", { enumerable: true, get: function () { return gold_read_orders_1.readGoldOrders; } });
 const account_read_orders_1 = require("./account/account-read-orders");
 Object.defineProperty(exports, "readAccountOrders", { enumerable: true, get: function () { return account_read_orders_1.readAccountOrders; } });
+const account_update_order_1 = require("./account/account-update-order");
+Object.defineProperty(exports, "updateAccountOrder", { enumerable: true, get: function () { return account_update_order_1.updateAccountOrder; } });
+const gold_update_order_1 = require("./gold/gold-update-order");
+Object.defineProperty(exports, "updateGoldOrder", { enumerable: true, get: function () { return gold_update_order_1.updateGoldOrder; } });
 //# sourceMappingURL=order.js.map

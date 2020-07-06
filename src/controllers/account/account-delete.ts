@@ -11,9 +11,6 @@ export const deleteAccount = async (req: Request, res: Response, next: NextFunct
         if (!account) {
             return res.status(404).send("Account not found");
         }
-        if (account.sold) {
-            return res.status(400).send("Account cannot be deleted from DB because it was sold");
-        }
         await Account.deleteOne({ _id: req.params.accountId })
         return res.status(200).json({ result: 'Successfully deleted account from the DB' })
     } catch (err) {

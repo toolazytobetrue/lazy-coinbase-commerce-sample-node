@@ -20,12 +20,15 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
             return res.status(404).send("Payment gateway not found");
         }
 
+        const authorizedUser: any = getAuthorizedUser(req, res, next);
+        if (authorizedUser !== null) {
+            userId = authorizedUser.id;
+        }
+
         if (paymentGateway.requiresLogin) {
-            const authorizedUser: any = getAuthorizedUser(req, res, next);
             if (authorizedUser === null) {
                 return res.status(401).send("Unauthorized access");
             }
-            userId = authorizedUser.id;
         }
 
         const latestStock = await Stock.findOne().sort({ dateCreated: -1 });

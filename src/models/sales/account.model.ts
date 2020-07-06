@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 export type AccountDocument = mongoose.Document & {
     title: string;
     description?: string;
-    img: string;
+    images: string[];
     price: number;
-    sold: boolean;
+    stock: number;
     dateCreated: Date;
     lastUpdated: Date;
 };
@@ -13,9 +13,9 @@ export type AccountDocument = mongoose.Document & {
 const AccountSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: false },
-    img: { type: String, required: true },
+    images: { type: [String], required: true },
     price: { type: Number, required: true },
-    sold: { type: Boolean, required: true },
+    stock: { type: Number, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date
 });

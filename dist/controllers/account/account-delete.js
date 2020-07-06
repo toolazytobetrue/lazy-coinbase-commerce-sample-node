@@ -21,9 +21,6 @@ exports.deleteAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!account) {
             return res.status(404).send("Account not found");
         }
-        if (account.sold) {
-            return res.status(400).send("Account cannot be deleted from DB because it was sold");
-        }
         yield account_model_1.Account.deleteOne({ _id: req.params.accountId });
         return res.status(200).json({ result: 'Successfully deleted account from the DB' });
     }

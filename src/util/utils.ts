@@ -50,7 +50,7 @@ export function logDetails(errorLevel: string, errorDescription: string) {
 export function getAuthorizedUser(req: Request, res: Response, next: NextFunction) {
     const token = getAuthorization(req);
     if (!token) {
-        return res.status(401).send('Unauthorized access');
+        return null;
     }
 
     return decodeToken(token);
@@ -116,3 +116,4 @@ export function isDbObjectId(input: string) {
 export function getOrderUrl(depositId: string) {
     return `${URL_ON_SUCCESS}?orderId=${depositId}`;
 }
+

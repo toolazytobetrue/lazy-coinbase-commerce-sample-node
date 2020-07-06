@@ -26,7 +26,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Order = exports.OrderSchema = exports.goldSchema = void 0;
+exports.Order = exports.OrderSchema = exports.Gold = exports.GoldSchema = void 0;
 // export type OrderDocument = mongoose.Document & {
 //     startDate?: Date;
 //     endDate?: Date;
@@ -134,12 +134,13 @@ const coupon_model_1 = require("../sales/coupon.model");
 const coinbase_model_1 = require("../paymentgateways/coinbase.model");
 const stock_model_1 = require("../sales/stock.model");
 const account_model_1 = require("../sales/account.model");
-exports.goldSchema = new mongoose_1.default.Schema({
+exports.GoldSchema = new mongoose_1.default.Schema({
     units: { type: Number, required: true },
     server: { type: Number, required: true },
     stock: { type: stock_model_1.Stock.schema, required: true },
     rsn: { type: String, required: true }
 });
+exports.Gold = mongoose_1.default.model('Gold', exports.GoldSchema);
 exports.OrderSchema = new mongoose_1.default.Schema({
     uuid: { type: String, required: true },
     dateCreated: { type: Date, required: true },
@@ -153,8 +154,8 @@ exports.OrderSchema = new mongoose_1.default.Schema({
     user: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false },
     coupon: { type: coupon_model_1.Coupon.schema, required: false },
     ipAddress: { type: String, required: false },
-    gold: exports.goldSchema,
-    account: account_model_1.Account.schema,
+    gold: { type: exports.Gold.schema, required: false },
+    account: { type: account_model_1.Account.schema, required: false },
 });
 exports.OrderSchema.pre('save', function save(next) {
     const order = this;

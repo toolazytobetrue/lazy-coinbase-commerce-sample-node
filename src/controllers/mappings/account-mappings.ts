@@ -1,5 +1,4 @@
 import { OrderDocument } from "../../models/order/order.model";
-import { mapToAccountDocument } from "../account/account-mappings";
 import { maptoCouponDocument } from "./coupon-mapper";
 import { getOrderUser } from "./services.mappings";
 
@@ -29,3 +28,18 @@ import { getOrderUser } from "./services.mappings";
 //         user: getOrderUser(order.user),
 //     }
 // } 
+
+import { AccountDocument } from "../../models/sales/account.model";
+
+export const mapToAccountDocument = (account: AccountDocument) => {
+    return {
+        accountId: account._id,
+        title: account.title,
+        description: account.description,
+        images: account.images,
+        price: account.price,
+        stock: account.stock,
+        dateCreated: account.dateCreated,
+        lastUpdated: account.lastUpdated
+    }
+}

@@ -8,9 +8,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const AccountSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true },
     description: { type: String, required: false },
-    img: { type: String, required: true },
+    images: { type: [String], required: true },
     price: { type: Number, required: true },
-    sold: { type: Boolean, required: true },
+    stock: { type: Number, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date
 });

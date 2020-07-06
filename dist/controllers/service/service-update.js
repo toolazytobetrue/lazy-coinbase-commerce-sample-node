@@ -38,7 +38,7 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return res.status(400).send("Service points should be an array");
         }
         if (utils_1.isEmptyOrNull(req.body.price)) {
-            return res.status(400).send("Service sold status is missing");
+            return res.status(400).send("Service price is missing");
         }
         const service = yield service_model_1.Service.findById(req.params.serviceId);
         if (!service) {

@@ -28,12 +28,14 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         if (!paymentGateway) {
             return res.status(404).send("Payment gateway not found");
         }
+        const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
+        if (authorizedUser !== null) {
+            userId = authorizedUser.id;
+        }
         if (paymentGateway.requiresLogin) {
-            const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
             if (authorizedUser === null) {
                 return res.status(401).send("Unauthorized access");
             }
-            userId = authorizedUser.id;
         }
         const latestStock = yield stock_model_1.Stock.findOne().sort({ dateCreated: -1 });
         if (utils_1.isEmptyOrNull(req.body.units) || isNaN(+req.body.units) || +req.body.units <= 0) {

@@ -9,14 +9,27 @@ import { transactionCreateAccountOrder } from '../../../api/order/create_account
 export const createAccountOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userIpAddress: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        const authorizedUser: any = getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
-        }
-        const userId = authorizedUser ? authorizedUser.id : null
+
+        let userId = null;
         if (isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
         }
+
+        const paymentGateway = await PaymentGateway.findById(req.body.paymentGatewayId);
+        if (!paymentGateway) {
+            return res.status(404).send("Payment gateway not found");
+        }
+
+        const authorizedUser: any = getAuthorizedUser(req, res, next);
+        if (authorizedUser !== null) {
+            userId = authorizedUser.id;
+        }
+        if (paymentGateway.requiresLogin) {
+            if (authorizedUser === null) {
+                return res.status(401).send("Unauthorized access");
+            }
+        }
+
         if (isEmptyOrNull(req.body.accountId)) {
             return res.status(400).send("Account id is missing");
         }
@@ -24,12 +37,8 @@ export const createAccountOrder = async (req: Request, res: Response, next: Next
         if (!account) {
             return res.status(404).send("Account not found");
         }
-        if (account.sold) {
-            return res.status(400).send("Account already sold");
-        }
-        const paymentGateway = await PaymentGateway.findById(req.body.paymentGatewayId);
-        if (!paymentGateway) {
-            return res.status(404).send("Payment gateway not found");
+        if (account.stock === 0) {
+            return res.status(400).send("Account not available in stock");
         }
 
         let coupon: null | undefined | CouponDocument;

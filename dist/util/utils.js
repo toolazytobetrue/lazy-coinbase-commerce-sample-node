@@ -54,7 +54,7 @@ exports.logDetails = logDetails;
 function getAuthorizedUser(req, res, next) {
     const token = getAuthorization(req);
     if (!token) {
-        return res.status(401).send('Unauthorized access');
+        return null;
     }
     return jwt_helper_1.decodeToken(token);
 }

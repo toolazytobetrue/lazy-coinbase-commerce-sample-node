@@ -28,7 +28,7 @@ export const updateService = async (req: Request, res: Response, next: NextFunct
             return res.status(400).send("Service points should be an array")
         }
         if (isEmptyOrNull(req.body.price)) {
-            return res.status(400).send("Service sold status is missing");
+            return res.status(400).send("Service price is missing");
         }
         const service = await Service.findById(req.params.serviceId);
         if (!service) {

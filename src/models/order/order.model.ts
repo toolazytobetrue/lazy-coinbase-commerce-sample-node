@@ -119,12 +119,21 @@ import { CoinbaseDocument, coinbaseOrderSchema } from '../paymentgateways/coinba
 import { Stock, StockDocument } from '../sales/stock.model';
 import { AccountDocument, Account } from '../sales/account.model';
 
-export type goldDocument = mongoose.Document & {
+export type GoldDocument = mongoose.Document & {
     units: number;
     server: number;
     stock: StockDocument;
     rsn: string;
 }
+
+export const GoldSchema = new mongoose.Schema({
+    units: { type: Number, required: true },
+    server: { type: Number, required: true },
+    stock: { type: Stock.schema, required: true },
+    rsn: { type: String, required: true }
+})
+
+export const Gold = mongoose.model<GoldDocument>('Gold', GoldSchema);
 
 export type OrderDocument = mongoose.Document & {
     uuid: string;
@@ -139,16 +148,9 @@ export type OrderDocument = mongoose.Document & {
     user?: mongoose.Schema.Types.ObjectId
     coupon?: CouponDocument,
     ipAddress?: string,
-    gold?: goldDocument,
+    gold?: GoldDocument,
     account?: AccountDocument
 };
-
-export const goldSchema = new mongoose.Schema({
-    units: { type: Number, required: true },
-    server: { type: Number, required: true },
-    stock: { type: Stock.schema, required: true },
-    rsn: { type: String, required: true }
-})
 
 export const OrderSchema = new mongoose.Schema({
     uuid: { type: String, required: true },
@@ -163,8 +165,8 @@ export const OrderSchema = new mongoose.Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
     coupon: { type: Coupon.schema, required: false },
     ipAddress: { type: String, required: false },
-    gold: goldSchema,
-    account: Account.schema,
+    gold: { type: Gold.schema, required: false },
+    account: { type: Account.schema, required: false },
 });
 
 OrderSchema.pre('save', function save(next) {

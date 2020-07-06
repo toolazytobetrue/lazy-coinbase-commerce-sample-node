@@ -27,8 +27,7 @@ exports.readAccountOrders = (req, res, next) => __awaiter(void 0, void 0, void 0
             .sort({ dateCreated: -1 })
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
-            .populate('user')
-            .populate('account');
+            .populate('user');
         const orders = _orders.map(order => gold_mappings_1.mapToOrderDocument(order));
         return res.status(200).json({
             pageNumber,
