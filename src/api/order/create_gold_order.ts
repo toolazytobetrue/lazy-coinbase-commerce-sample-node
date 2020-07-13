@@ -24,7 +24,7 @@ export async function transactionCreateGoldOrder(goldType: string, units: number
         if (isEmptyOrNull(rsn)) {
             throw new Error("RSN is required")
         }
-        rsn = rsn.toLowerCase();
+
         const total = +round(units * (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling), 2);
         const percentage = 100 - (coupon ? coupon.amount : 0);
         const ratio = percentage / 100;

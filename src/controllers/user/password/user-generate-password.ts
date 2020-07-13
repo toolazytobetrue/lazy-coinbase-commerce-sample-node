@@ -35,7 +35,7 @@ export const generateUserPassword = async (req: Request, res: Response, next: Ne
 
         res.status(200).json({ result: "Successfully sent a new password to the email attached to the account" });
 
-        let content = `<p>Hello ${user.firstName},<br>`;
+        let content = `<p>Hello,<br>`;
         content += `Your newly generated password is ${newPassword}<br>`
         content += `Best regards<br>`;
         content += `${WEBSITE_SUPPORT_NAME}</p>`;

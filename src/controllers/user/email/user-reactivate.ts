@@ -26,7 +26,7 @@ export const resendUserActivation = async (req: Request, res: Response, next: Ne
         const link = `${URL_MAIN}/login?identifier=${emailChange.identifier}&userId=${user._id}`;
         res.status(200).json({ result: "Please check your inbox to activate your account" });
 
-        let content = `<p>Hello ${user.firstName},<br>`;
+        let content = `<p>Hello,<br>`;
         content += `A request has been sent to activate your email address on ${emailChange.dateCreated.toLocaleString()}<br>`;
         content += `To activate your account, please click <a href="${link}">here</a> or click on the following link: ${link}</p>`
         content += `Best regards<br>`;

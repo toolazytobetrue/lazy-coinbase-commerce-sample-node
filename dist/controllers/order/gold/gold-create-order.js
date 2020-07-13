@@ -87,7 +87,17 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const order = yield create_gold_order_1.transactionCreateGoldOrder(req.body.type, +mathjs_1.round(req.body.units, 2), latestStock, paymentGateway, req.body.rsn, coupon, userIpAddress, userId);
+        let _rsn = req.body.rsn.toLowerCase();
+        let rsn = '';
+        for (let i = 0; i < _rsn.length; i++) {
+            if (_rsn[i] === 'l') {
+                rsn += 'L';
+            }
+            else {
+                rsn += _rsn[i];
+            }
+        }
+        const order = yield create_gold_order_1.transactionCreateGoldOrder(req.body.type, +mathjs_1.round(req.body.units, 2), latestStock, paymentGateway, rsn, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     }
     catch (err) {

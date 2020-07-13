@@ -83,7 +83,19 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, req.body.rsn, coupon, userIpAddress, userId);
+
+
+
+        let _rsn = req.body.rsn.toLowerCase();
+        let rsn = '';
+        for (let i = 0; i < _rsn.length; i++) {
+            if (_rsn[i] === 'l') {
+                rsn += 'L';
+            } else {
+                rsn += _rsn[i]
+            }
+        }
+        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, rsn, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     } catch (err) {
         logDetails('error', `Error creating an order ${err}`);

@@ -5,10 +5,8 @@ import { mapToUserDocument } from "./user-mappings";
 
 export const readUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (!isEmptyOrNull(req.query.pageNumber)) {
-            if (isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
-                return res.status(400).send("Page number is missing")
-            }
+        if (isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+            return res.status(400).send("Page number is missing")
         }
 
         let filter = {};

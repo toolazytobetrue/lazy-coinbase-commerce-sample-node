@@ -8,8 +8,8 @@ export type UserDocument = mongoose.Document & {
     groupId: number;
     email: string;
     password: string;
-    firstName: string;
-    lastName: string;
+    // firstName: string;
+    // lastName: string;
     dateCreated: Date;
     lastUpdated: Date;
     userEmails: UserEmailDocument[];
@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema({
     groupId: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    // firstName: { type: String, required: true },
+    // lastName: { type: String, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,
     userEmails: [UserEmailSchema],

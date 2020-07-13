@@ -15,10 +15,8 @@ const utils_1 = require("../../util/utils");
 const user_mappings_1 = require("./user-mappings");
 exports.readUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!utils_1.isEmptyOrNull(req.query.pageNumber)) {
-            if (isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
-                return res.status(400).send("Page number is missing");
-            }
+        if (utils_1.isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+            return res.status(400).send("Page number is missing");
         }
         let filter = {};
         const numberPerPage = 10;

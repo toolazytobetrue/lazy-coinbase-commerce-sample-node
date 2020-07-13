@@ -64,7 +64,7 @@ function transactionCreateUser(userPermission = UserPermissions_enum_1.USER_PERM
                 then((users) => __awaiter(this, void 0, void 0, function* () {
                 const user = users[0];
                 const link = `${secrets_1.URL_MAIN}/login?identifier=${identifier}&userId=${user._id}`;
-                let content = `<p>Hello ${user.firstName},<br>`;
+                let content = `<p>Hello,<br>`;
                 content += `Welcome to ${secrets_1.WEBSITE_NAME}, Your Only One Stop Shop For All Your Runescape Needs<br>`;
                 content += `To activate your account, please click <a href="${link}">here</a> or use the following link in your browser: ${link}<br>`;
                 content += `Best regards<br>`;

@@ -38,7 +38,7 @@ exports.generateUserPassword = (req, res, next) => __awaiter(void 0, void 0, voi
         user.password = newPassword;
         yield user.save();
         res.status(200).json({ result: "Successfully sent a new password to the email attached to the account" });
-        let content = `<p>Hello ${user.firstName},<br>`;
+        let content = `<p>Hello,<br>`;
         content += `Your newly generated password is ${newPassword}<br>`;
         content += `Best regards<br>`;
         content += `${secrets_1.WEBSITE_SUPPORT_NAME}</p>`;

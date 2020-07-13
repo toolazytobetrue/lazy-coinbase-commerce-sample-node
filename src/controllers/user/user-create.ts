@@ -1,7 +1,7 @@
 import { isEmptyOrNull, logDetails, generateUuid } from "../../util/utils";
 import { Request, Response } from 'express';
 import * as EmailValidator from 'email-validator';
-import { transactionCreateUser } from "../../api/user/create_transaction_user";
+import { transactionCreateUser } from "../../api/user/create_user";
 import { USER_PERMISSIONS } from "../../models/enums/UserPermissions.enum";
 import { removeCacheElement, getCacheElement, setCacheElement } from "../../api/redis-api";
 import { REDIS_CLIENT } from "../../app";
@@ -21,13 +21,13 @@ export const createUser = async (req: Request, res: Response) => {
             return res.status(400).send('Password is missing');
         }
 
-        if (isEmptyOrNull(req.body.firstName)) {
-            return res.status(400).send('First name is missing');
-        }
+        // if (isEmptyOrNull(req.body.firstName)) {
+        //     return res.status(400).send('First name is missing');
+        // }
 
-        if (isEmptyOrNull(req.body.lastName)) {
-            return res.status(400).send('Last name is missing');
-        }
+        // if (isEmptyOrNull(req.body.lastName)) {
+        //     return res.status(400).send('Last name is missing');
+        // }
 
         if (req.body.password !== req.body.confirm_password) {
             return res.status(400).send('Passwords do not match');

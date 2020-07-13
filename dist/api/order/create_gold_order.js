@@ -31,7 +31,6 @@ function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn,
             if (utils_1.isEmptyOrNull(rsn)) {
                 throw new Error("RSN is required");
             }
-            rsn = rsn.toLowerCase();
             const total = +mathjs_1.round(units * (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling), 2);
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;

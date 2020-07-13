@@ -38,7 +38,7 @@ export const forgotUserPassword = async (req: Request, res: Response, next: Next
         const link = `${URL_MAIN}/forgot-password?identifier=${passwordReset.identifier}&userId=${user._id}`
         res.status(200).json({ result: "Successfully sent a recovery password activation link" });
 
-        let content = `<p>Hello ${user.firstName},<br>`;
+        let content = `<p>Hello,<br>`;
         content += `A request has been sent to change your account password on ${passwordReset.dateCreated.toLocaleString()}<br>`;
         content += `To generate a new password, please click <a href="${link}">here</a> or use the following link in your browser: ${link}<br>`
         content += `Best regards<br>`;

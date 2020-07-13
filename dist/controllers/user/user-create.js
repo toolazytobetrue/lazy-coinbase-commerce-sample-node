@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = void 0;
 const utils_1 = require("../../util/utils");
 const EmailValidator = __importStar(require("email-validator"));
-const create_transaction_user_1 = require("../../api/user/create_transaction_user");
+const create_user_1 = require("../../api/user/create_user");
 const UserPermissions_enum_1 = require("../../models/enums/UserPermissions.enum");
 const redis_api_1 = require("../../api/redis-api");
 const app_1 = require("../../app");
@@ -48,12 +48,12 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (utils_1.isEmptyOrNull(req.body.password) || utils_1.isEmptyOrNull(req.body.confirm_password)) {
             return res.status(400).send('Password is missing');
         }
-        if (utils_1.isEmptyOrNull(req.body.firstName)) {
-            return res.status(400).send('First name is missing');
-        }
-        if (utils_1.isEmptyOrNull(req.body.lastName)) {
-            return res.status(400).send('Last name is missing');
-        }
+        // if (isEmptyOrNull(req.body.firstName)) {
+        //     return res.status(400).send('First name is missing');
+        // }
+        // if (isEmptyOrNull(req.body.lastName)) {
+        //     return res.status(400).send('Last name is missing');
+        // }
         if (req.body.password !== req.body.confirm_password) {
             return res.status(400).send('Passwords do not match');
         }
@@ -73,7 +73,7 @@ exports.createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
         const password = req.body.password;
         const identifier = utils_1.generateUuid();
-        yield create_transaction_user_1.transactionCreateUser(UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER, email, password, req.body.firstName, req.body.lastName, identifier, req.body.discord, req.body.skype);
+        yield create_user_1.transactionCreateUser(UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER, email, password, req.body.firstName, req.body.lastName, identifier, req.body.discord, req.body.skype);
         return res.status(200).json({ result: `Your account has been created, please check your inbox to activate your account` });
     }
     catch (err) {
