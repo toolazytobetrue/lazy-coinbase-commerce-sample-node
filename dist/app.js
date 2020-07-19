@@ -93,6 +93,7 @@ app.put('/api/user/:userId/group', security_1.isAuthorizedRootAdmin, userControl
  */
 app.post('/api/order/gold', orderController.createGoldOrder);
 app.post('/api/order/account', orderController.createAccountOrder);
+app.post('/api/order/services', orderController.createServicesOrder);
 app.post('/api/order/services', security_1.isAuthorized, orderController.createServicesOrder);
 // app.get('/api/order', isAuthorizedBelowAdmin, orderController.readOrders);
 app.get('/api/order/gold', security_1.isAuthorizedBelowAdmin, orderController.readGoldOrders);
@@ -107,7 +108,6 @@ app.post('/api/order/:orderId/request', security_1.isAuthorizedBelowAdmin, order
  */
 app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateStock);
 app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
-app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
 app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
 app.get('/api/account', security_1.isAuthorizedRootAdmin, accountController.readAccounts);
 app.get('/api/account/available', accountController.readAvailableAccounts);

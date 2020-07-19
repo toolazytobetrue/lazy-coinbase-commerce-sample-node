@@ -118,6 +118,8 @@ import { Coupon, CouponDocument } from '../sales/coupon.model';
 import { CoinbaseDocument, coinbaseOrderSchema } from '../paymentgateways/coinbase.model';
 import { Stock, StockDocument } from '../sales/stock.model';
 import { AccountDocument, Account } from '../sales/account.model';
+import { ServiceMinigame, ServiceMinigameDocument } from '../sales/serviceminigame.model';
+import { PowerlevelingDocument, Powerleveling } from '../sales/powerleveling.model';
 
 export type GoldDocument = mongoose.Document & {
     units: number;
@@ -149,7 +151,9 @@ export type OrderDocument = mongoose.Document & {
     coupon?: CouponDocument,
     ipAddress?: string,
     gold?: GoldDocument,
-    account?: AccountDocument
+    account?: AccountDocument,
+    services?: ServiceMinigameDocument[];
+    powerleveling?: PowerlevelingDocument[];
 };
 
 export const OrderSchema = new mongoose.Schema({
@@ -167,6 +171,8 @@ export const OrderSchema = new mongoose.Schema({
     ipAddress: { type: String, required: false },
     gold: { type: Gold.schema, required: false },
     account: { type: Account.schema, required: false },
+    services: { type: [ServiceMinigame.schema], required: false },
+    powerleveling: { type: [Powerleveling.schema], required: false }
 });
 
 OrderSchema.pre('save', function save(next) {

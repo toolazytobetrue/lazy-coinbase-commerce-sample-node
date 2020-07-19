@@ -16,8 +16,8 @@ const stock_model_1 = require("../../../models/sales/stock.model");
 const skill_model_1 = require("../../../models/sales/skill.model");
 const powerleveling_calculator_1 = require("../../service/powerleveling-calculator");
 const service_model_1 = require("../../../models/sales/service.model");
-// import { transactionCreateServicesOrder } from '../../../api/order/create_transaction_order_services';
 const coupon_model_1 = require("../../../models/sales/coupon.model");
+const create_service_1 = require("../../../api/order/create_service");
 exports.createServicesOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
@@ -120,8 +120,8 @@ exports.createServicesOrder = (req, res, next) => __awaiter(void 0, void 0, void
             services = servicesToFind;
         }
         if (powerleveling.length > 0 || services.length > 0) {
-            // const genericTransaction = await transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
-            // return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
+            const genericTransaction = yield create_service_1.transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
+            return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
         }
         else {
             return res.status(404).send("You need to at least choose 1 service (powerleveling/minigame/quest)");

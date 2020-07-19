@@ -82,6 +82,7 @@ app.put('/api/user/:userId/group', isAuthorizedRootAdmin, userController.updateU
 
 app.post('/api/order/gold', orderController.createGoldOrder);
 app.post('/api/order/account', orderController.createAccountOrder);
+app.post('/api/order/services', orderController.createServicesOrder);
 
 app.post('/api/order/services', isAuthorized, orderController.createServicesOrder);
 
@@ -107,7 +108,6 @@ app.post('/api/order/:orderId/request', isAuthorizedBelowAdmin, orderController.
 app.put('/api/stock', isAuthorizedRootAdmin, stockController.updateStock);
 
 app.post('/api/account', isAuthorizedRootAdmin, accountController.createAccount);
-app.post('/api/service', isAuthorizedRootAdmin, serviceController.createService);
 app.post('/api/skill', isAuthorizedRootAdmin, skillController.createSkill);
 
 app.get('/api/account', isAuthorizedRootAdmin, accountController.readAccounts);

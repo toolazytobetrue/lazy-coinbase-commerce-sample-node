@@ -12,6 +12,7 @@ const SkillRangeSchema = new mongoose_1.default.Schema({
 });
 const SkillSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true },
+    img: { type: String, required: true },
     range: [SkillRangeSchema],
     dateCreated: { type: Date, required: true },
     lastUpdated: Date

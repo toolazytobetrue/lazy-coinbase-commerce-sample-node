@@ -10,6 +10,9 @@ export const updateSkill = async (req: Request, res: Response, next: NextFunctio
         if (isEmptyOrNull(req.body.title)) {
             return res.status(400).send("Skill title is missing")
         }
+        if (isEmptyOrNull(req.body.img)) {
+            return res.status(400).send("Skill img is missing")
+        }
         if (isEmptyOrNull(req.body.range) || !Array.isArray(req.body.range)) {
             return res.status(400).send("Skill range is missing")
         }

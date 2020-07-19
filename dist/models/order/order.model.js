@@ -134,6 +134,8 @@ const coupon_model_1 = require("../sales/coupon.model");
 const coinbase_model_1 = require("../paymentgateways/coinbase.model");
 const stock_model_1 = require("../sales/stock.model");
 const account_model_1 = require("../sales/account.model");
+const serviceminigame_model_1 = require("../sales/serviceminigame.model");
+const powerleveling_model_1 = require("../sales/powerleveling.model");
 exports.GoldSchema = new mongoose_1.default.Schema({
     units: { type: Number, required: true },
     server: { type: Number, required: true },
@@ -156,6 +158,8 @@ exports.OrderSchema = new mongoose_1.default.Schema({
     ipAddress: { type: String, required: false },
     gold: { type: exports.Gold.schema, required: false },
     account: { type: account_model_1.Account.schema, required: false },
+    services: { type: [serviceminigame_model_1.ServiceMinigame.schema], required: false },
+    powerleveling: { type: [powerleveling_model_1.Powerleveling.schema], required: false }
 });
 exports.OrderSchema.pre('save', function save(next) {
     const order = this;

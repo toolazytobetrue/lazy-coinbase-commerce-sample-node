@@ -8,6 +8,7 @@ export type SkillRangeDocument = mongoose.Document & {
 
 export type SkillDocument = mongoose.Document & {
     title: string;
+    img: string;
     range: SkillRangeDocument[];
     dateCreated: Date;
     lastUpdated: Date;
@@ -21,6 +22,7 @@ const SkillRangeSchema = new mongoose.Schema({
 
 const SkillSchema = new mongoose.Schema({
     title: { type: String, required: true },
+    img: { type: String, required: true },
     range: [SkillRangeSchema],
     dateCreated: { type: Date, required: true },
     lastUpdated: Date

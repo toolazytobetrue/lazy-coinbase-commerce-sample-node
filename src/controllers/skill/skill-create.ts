@@ -15,6 +15,7 @@ export const createSkill = async (req: Request, res: Response, next: NextFunctio
         await (Skill.create([
             {
                 title: req.body.title,
+                img: req.body.img,
                 range: req.body.range,
                 dateCreated: new Date()
             }

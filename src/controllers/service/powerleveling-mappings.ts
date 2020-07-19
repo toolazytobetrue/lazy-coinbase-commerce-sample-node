@@ -4,6 +4,7 @@ export const mapToSkill = (skill: SkillDocument) => {
     return {
         skillId: skill._id,
         title: skill.title,
+        img: skill.img,
         range: skill.range.map(r => mapToSkillRange(r)),
         dateCreated: skill.dateCreated,
         lastUpdated: skill.lastUpdated

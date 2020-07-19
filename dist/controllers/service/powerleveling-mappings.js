@@ -5,6 +5,7 @@ exports.mapToSkill = (skill) => {
     return {
         skillId: skill._id,
         title: skill.title,
+        img: skill.img,
         range: skill.range.map(r => exports.mapToSkillRange(r)),
         dateCreated: skill.dateCreated,
         lastUpdated: skill.lastUpdated

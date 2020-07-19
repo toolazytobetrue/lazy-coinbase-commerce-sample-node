@@ -5,8 +5,8 @@ import { Stock } from '../../../models/sales/stock.model';
 import { Skill, SkillDocument } from '../../../models/sales/skill.model';
 import { getXpDetails, getTotalPrice } from '../../service/powerleveling-calculator';
 import { ServiceDocument, Service } from '../../../models/sales/service.model';
-// import { transactionCreateServicesOrder } from '../../../api/order/create_transaction_order_services';
 import { CouponDocument, Coupon } from '../../../models/sales/coupon.model';
+import { transactionCreateServicesOrder } from '../../../api/order/create_service';
 
 export const createServicesOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -118,8 +118,8 @@ export const createServicesOrder = async (req: Request, res: Response, next: Nex
         }
 
         if (powerleveling.length > 0 || services.length > 0) {
-            // const genericTransaction = await transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
-            // return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
+            const genericTransaction = await transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
+            return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
         } else {
             return res.status(404).send("You need to at least choose 1 service (powerleveling/minigame/quest)")
         }
