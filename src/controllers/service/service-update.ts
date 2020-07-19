@@ -21,11 +21,8 @@ export const updateService = async (req: Request, res: Response, next: NextFunct
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative")
         }
-        if (!isArray(req.body.requirements)) {
-            return res.status(400).send("Service requirements should be an array")
-        }
-        if (!isArray(req.body.points)) {
-            return res.status(400).send("Service points should be an array")
+        if (isEmptyOrNull(req.body.description)) {
+            return res.status(400).send("Service description is missing")
         }
         if (isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Service price is missing");
@@ -37,8 +34,8 @@ export const updateService = async (req: Request, res: Response, next: NextFunct
 
         service.title = req.body.title;
         service.price = +round(req.body.price, 2);
-        service.requirements = req.body.requirements;
-        service.points = req.body.points;
+        service.description = req.body.description;
+        service.img = isEmptyOrNull(req.body.img) ? null : req.body.img;
         await service.save();
         return res.status(200).json({ result: `Successfully updated service ${service._id} in the DB` })
     } catch (err) {

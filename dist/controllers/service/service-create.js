@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createService = void 0;
 const utils_1 = require("../../util/utils");
 const service_model_1 = require("../../models/sales/service.model");
-const util_1 = require("util");
 const mathjs_1 = require("mathjs");
 const Services_enum_1 = require("../../models/enums/Services.enum");
 exports.createService = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,22 +28,22 @@ exports.createService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative");
         }
-        if (!util_1.isArray(req.body.points)) {
-            return res.status(400).send("Service points should be an array");
+        if (utils_1.isEmptyOrNull(req.body.description)) {
+            return res.status(400).send("Service description is missing");
         }
-        if (!util_1.isArray(req.body.requirements)) {
-            return res.status(400).send("Service requirements should be an array");
+        if (utils_1.isEmptyOrNull(req.body.price)) {
+            return res.status(400).send("Service price is missing");
         }
         if (Services_enum_1.ServicesEnum[req.body.type] === undefined || Services_enum_1.ServicesEnum[req.body.type] === null) {
             return res.status(400).send("Services type not found");
         }
         const service = yield (new service_model_1.Service({
             title: req.body.title,
-            points: req.body.points,
-            requirements: req.body.requirements,
+            description: req.body.description,
+            img: req.body.img,
             price: +mathjs_1.round(+req.body.price, 2),
             dateCreated: new Date(),
-            type: Services_enum_1.ServicesEnum[req.body.type]
+            type: +req.body.type
         })).save();
         return res.status(200).json({ result: 'Successfully added a new service to the DB' });
     }

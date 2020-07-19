@@ -6,8 +6,8 @@ exports.mapToServiceDocument = (service) => {
         serviceId: service._id,
         title: service.title,
         type: service.type,
-        points: service.points,
-        requirements: service.requirements,
+        description: service.description,
+        img: service.img,
         price: service.price,
         dateCreated: service.dateCreated,
         lastUpdated: service.lastUpdated

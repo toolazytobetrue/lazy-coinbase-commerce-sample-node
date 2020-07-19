@@ -19,22 +19,22 @@ export const createService = async (req: Request, res: Response, next: NextFunct
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative")
         }
-        if (!isArray(req.body.points)) {
-            return res.status(400).send("Service points should be an array")
+        if (isEmptyOrNull(req.body.description)) {
+            return res.status(400).send("Service description is missing")
         }
-        if (!isArray(req.body.requirements)) {
-            return res.status(400).send("Service requirements should be an array")
+        if (isEmptyOrNull(req.body.price)) {
+            return res.status(400).send("Service price is missing");
         }
         if (ServicesEnum[req.body.type] === undefined || ServicesEnum[req.body.type] === null) {
             return res.status(400).send("Services type not found")
         }
         const service = await (new Service({
             title: req.body.title,
-            points: req.body.points,
-            requirements: req.body.requirements,
+            description: req.body.description,
+            img: req.body.img,
             price: +round(+req.body.price, 2),
             dateCreated: new Date(),
-            type: ServicesEnum[req.body.type]
+            type: +req.body.type
         })).save()
         return res.status(200).json({ result: 'Successfully added a new service to the DB' })
     } catch (err) {

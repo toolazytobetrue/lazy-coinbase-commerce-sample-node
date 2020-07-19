@@ -18,15 +18,12 @@ exports.readServices = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         if (utils_1.isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
             return res.status(400).send("Page number is missing");
         }
-        if (utils_1.isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
-            return res.status(400).send("Type is missing");
-        }
-        if (utils_1.isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
-            return res.status(400).send("Type is missing");
-        }
+        // if (isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
+        //     return res.status(400).send("Type is missing")
+        // }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
-        const objectToFind = utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
+        const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
         const services = yield service_model_1.Service.find(objectToFind)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)

@@ -58,7 +58,10 @@ exports.Client = coinbase.Client;
 exports.Webhook = coinbase.Webhook;
 exports.Client.init(secrets_1.COINBASE_API_KEY);
 mongoose_1.default.set('useCreateIndex', true);
-mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true })
+mongoose_1.default.connect(mongoUrl, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+})
     .then(() => {
     console.log('Successfully connected to mongodb');
     redis_users_1.setUserArray(exports.REDIS_CLIENT, '[]');
@@ -109,6 +112,7 @@ app.post('/api/order/:orderId/request', security_1.isAuthorizedBelowAdmin, order
 app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateStock);
 app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
+app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
 app.get('/api/account', security_1.isAuthorizedRootAdmin, accountController.readAccounts);
 app.get('/api/account/available', accountController.readAvailableAccounts);
 app.get('/api/service', serviceController.readServices);

@@ -8,8 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const ServiceSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true },
     type: { type: Number, required: true },
-    points: [String],
-    requirements: [String],
+    description: { type: String, required: true },
+    img: { type: String, required: false },
     price: { type: Number, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,

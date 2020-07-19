@@ -11,17 +11,25 @@ import { transactionCreateServicesOrder } from '../../../api/order/create_servic
 export const createServicesOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userIpAddress: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        const authorizedUser: any = getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
-        }
-        const userId = authorizedUser ? authorizedUser.id : null
+        let userId = null;
         if (isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
         }
+
         const paymentGateway = await PaymentGateway.findById(req.body.paymentGatewayId);
         if (!paymentGateway) {
             return res.status(404).send("Payment gateway not found");
+        }
+
+        const authorizedUser: any = getAuthorizedUser(req, res, next);
+        if (authorizedUser !== null) {
+            userId = authorizedUser.id;
+        }
+
+        if (paymentGateway.requiresLogin) {
+            if (authorizedUser === null) {
+                return res.status(401).send("Unauthorized access");
+            }
         }
 
         let coupon: null | undefined | CouponDocument;
@@ -92,7 +100,7 @@ export const createServicesOrder = async (req: Request, res: Response, next: Nex
         if (req.body.services && Array.isArray(req.body.services) && req.body.services.length > 0) {
             const serviceIds: string[] = [];
             let errors: string[] = [];
-            req.body.services.forEach((element: any) => {
+            req.body.services.map((s: any) => s.serviceId).forEach((element: any) => {
                 if (typeof element === 'string') {
                     serviceIds.push(element);
                 } else {
@@ -110,11 +118,10 @@ export const createServicesOrder = async (req: Request, res: Response, next: Nex
                 }
             });
 
-            if (servicesToFind.length !== serviceIds.length) {
-                return res.status(404).send("Some services couldn't be found")
-            }
-
-            services = servicesToFind;
+            servicesToFind.forEach(s => {
+                const servicesFoundLength = req.body.services.filter((_: any) => `${_.serviceId}` === `${s._id}`).length;
+                services = [...services, ...new Array(servicesFoundLength).fill(s)];
+            })
         }
 
         if (powerleveling.length > 0 || services.length > 0) {

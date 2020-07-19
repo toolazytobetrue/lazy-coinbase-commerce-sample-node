@@ -9,18 +9,14 @@ export const readServices = async (req: Request, res: Response, next: NextFuncti
             return res.status(400).send("Page number is missing")
         }
 
-        if (isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
-            return res.status(400).send("Type is missing")
-        }
-
-        if (isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
-            return res.status(400).send("Type is missing")
-        }
+        // if (isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
+        //     return res.status(400).send("Type is missing")
+        // }
 
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
 
-        const objectToFind = isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
+        const objectToFind = isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
         const services = await Service.find(objectToFind)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)

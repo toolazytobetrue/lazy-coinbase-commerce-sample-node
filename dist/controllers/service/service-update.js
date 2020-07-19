@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateService = void 0;
 const utils_1 = require("../../util/utils");
-const util_1 = require("util");
 const mathjs_1 = require("mathjs");
 const service_model_1 = require("../../models/sales/service.model");
 exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,11 +30,8 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative");
         }
-        if (!util_1.isArray(req.body.requirements)) {
-            return res.status(400).send("Service requirements should be an array");
-        }
-        if (!util_1.isArray(req.body.points)) {
-            return res.status(400).send("Service points should be an array");
+        if (utils_1.isEmptyOrNull(req.body.description)) {
+            return res.status(400).send("Service description is missing");
         }
         if (utils_1.isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Service price is missing");
@@ -46,8 +42,8 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         service.title = req.body.title;
         service.price = +mathjs_1.round(req.body.price, 2);
-        service.requirements = req.body.requirements;
-        service.points = req.body.points;
+        service.description = req.body.description;
+        service.img = utils_1.isEmptyOrNull(req.body.img) ? null : req.body.img;
         yield service.save();
         return res.status(200).json({ result: `Successfully updated service ${service._id} in the DB` });
     }
