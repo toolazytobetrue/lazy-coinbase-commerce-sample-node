@@ -11,7 +11,7 @@ export const updateUserGroup = async (req: Request, res: Response, next: NextFun
         if (isEmptyOrNull(req.body.groupId)) {
             return res.status(400).send('Group id is missing');
         }
-        if (+req.body.groupId !== USER_PERMISSIONS.ADMIN && +req.body.groupId !== USER_PERMISSIONS.MODERATOR && +req.body.groupId !== USER_PERMISSIONS.WORKER && +req.body.groupId !== USER_PERMISSIONS.CUSTOMER) {
+        if (+req.body.groupId !== USER_PERMISSIONS.ADMIN && +req.body.groupId !== USER_PERMISSIONS.MODERATOR && +req.body.groupId !== USER_PERMISSIONS.CUSTOMER) {
             return res.status(400).send('Group id not found');
         }
         const user = await User.findById(req.params.userId);

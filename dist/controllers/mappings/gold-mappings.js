@@ -35,7 +35,9 @@ exports.mapToOrderDocument = (order) => {
         coupon: order.coupon ? coupon_mapper_1.maptoCouponDocument(order.coupon) : null,
         ipAddress: order.ipAddress ? order.ipAddress : 'N/A',
         gold: order.gold ? exports.mapToOrderGoldDocument(order.gold) : null,
-        account: order.account ? account_mappings_1.mapToAccountDocument(order.account) : null
+        account: order.account ? account_mappings_1.mapToAccountDocument(order.account) : null,
+        services: order.services,
+        powerleveling: order.powerleveling
     };
 };
 exports.mapToOrderGoldDocument = (goldDoc) => {

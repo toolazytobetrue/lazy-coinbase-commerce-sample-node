@@ -34,7 +34,9 @@ export const mapToOrderDocument = (order: OrderDocument) => {
         coupon: order.coupon ? maptoCouponDocument(order.coupon) : null,
         ipAddress: order.ipAddress ? order.ipAddress : 'N/A',
         gold: order.gold ? mapToOrderGoldDocument(order.gold) : null,
-        account: order.account ? mapToAccountDocument(order.account) : null
+        account: order.account ? mapToAccountDocument(order.account) : null,
+        services: order.services,
+        powerleveling: order.powerleveling
     }
 }
 

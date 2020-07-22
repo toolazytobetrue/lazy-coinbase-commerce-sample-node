@@ -13,7 +13,7 @@ export async function isAuthorized(req: Request, res: Response, next: NextFuncti
     if (!userCache) {
         return res.status(401).send('User is not authenticated, please login again');
     }
-    verifyDateInternal(token, [USER_PERMISSIONS.ADMIN, USER_PERMISSIONS.MODERATOR, USER_PERMISSIONS.WORKER, USER_PERMISSIONS.CUSTOMER])
+    verifyDateInternal(token, [USER_PERMISSIONS.ADMIN, USER_PERMISSIONS.MODERATOR, USER_PERMISSIONS.CUSTOMER])
         .then(resolve => {
             return next();
         }).catch(err => {
@@ -52,7 +52,7 @@ export async function isAuthorizedBelowAdmin(req: Request, res: Response, next: 
     if (!userCache) {
         return res.status(401).send('User is not authenticated, please login again');
     }
-    verifyDateInternal(token, [USER_PERMISSIONS.ADMIN, USER_PERMISSIONS.MODERATOR, USER_PERMISSIONS.WORKER]).then(resolve => {
+    verifyDateInternal(token, [USER_PERMISSIONS.ADMIN, USER_PERMISSIONS.MODERATOR]).then(resolve => {
         return next();
     }).catch(err => {
         return res.status(401).send(err);

@@ -93,13 +93,11 @@ app.post('/api/order/services', isAuthorized, orderController.createServicesOrde
 
 app.get('/api/order/gold', isAuthorizedBelowAdmin, orderController.readGoldOrders);
 app.get('/api/order/account', isAuthorizedBelowAdmin, orderController.readAccountOrders);
+app.get('/api/order/services', isAuthorizedBelowAdmin, orderController.readServicesOrders);
 app.get('/api/order/:orderId', orderController.readOrder);
 
 app.put('/api/order/:orderId/gold', isAuthorizedRootAdmin, orderController.updateGoldOrder);
 app.put('/api/order/:orderId/account', isAuthorizedRootAdmin, orderController.updateAccountOrder);
-
-app.get('/api/order/calendar', isAuthorizedBelowAdmin, orderController.readOrdersByCalendar);
-
 
 app.post('/api/order/:orderId/request', isAuthorizedBelowAdmin, orderController.requestOrder);
 

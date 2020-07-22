@@ -18,14 +18,6 @@ export const requestOrder = async (req: Request, res: Response, next: NextFuncti
             return res.status(404).send("Order not found");
         }
 
-        // const workersRequested = order.requests.map((r: any) => r.worker._id);
-        // if (workersRequested.indexOf(userId) >= 0) {
-        //     return res.status(404).send("You've already requested to be assigned to this task, please be patient");
-        // }
-        // order.requests.push({
-        //     dateCreated: new Date(),
-        //     worker: userId
-        // });
         await order.save();
         return res.status(200).json({ result: `Successfully requested assignment to task ${order._id}` });
     } catch (err) {

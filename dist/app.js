@@ -101,10 +101,10 @@ app.post('/api/order/services', security_1.isAuthorized, orderController.createS
 // app.get('/api/order', isAuthorizedBelowAdmin, orderController.readOrders);
 app.get('/api/order/gold', security_1.isAuthorizedBelowAdmin, orderController.readGoldOrders);
 app.get('/api/order/account', security_1.isAuthorizedBelowAdmin, orderController.readAccountOrders);
+app.get('/api/order/services', security_1.isAuthorizedBelowAdmin, orderController.readServicesOrders);
 app.get('/api/order/:orderId', orderController.readOrder);
 app.put('/api/order/:orderId/gold', security_1.isAuthorizedRootAdmin, orderController.updateGoldOrder);
 app.put('/api/order/:orderId/account', security_1.isAuthorizedRootAdmin, orderController.updateAccountOrder);
-app.get('/api/order/calendar', security_1.isAuthorizedBelowAdmin, orderController.readOrdersByCalendar);
 app.post('/api/order/:orderId/request', security_1.isAuthorizedBelowAdmin, orderController.requestOrder);
 /**
  * Entities Management
