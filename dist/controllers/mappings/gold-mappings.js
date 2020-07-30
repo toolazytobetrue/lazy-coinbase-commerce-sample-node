@@ -15,7 +15,6 @@ exports.mapToOrderDocument = (order) => {
     if (order.gold) {
         const unitPrice = +mathjs_1.round(order.gold.server === 1 ? order.gold.stock.osrs.selling : order.gold.stock.rs3.selling, 2);
         amount = +mathjs_1.round(order.gold ? order.gold.units * unitPrice : 0);
-        console.log(unitPrice, amount);
         amountWithDiscount = +mathjs_1.round(amount * ratio, 2);
     }
     else if (order.account) {
