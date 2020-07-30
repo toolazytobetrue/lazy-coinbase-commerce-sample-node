@@ -46,7 +46,7 @@ const redis_1 = __importDefault(require("redis"));
 const security_1 = require("./util/security");
 const redis_users_1 = require("./api/redis-users");
 const redisOptions = {
-// password: REDIS_PASSWORD
+    password: secrets_1.REDIS_PASSWORD
 };
 exports.REDIS_CLIENT = redis_1.default.createClient(redisOptions);
 const app = express_1.default();

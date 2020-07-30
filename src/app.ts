@@ -21,7 +21,7 @@ import redis from 'redis';
 import { isAuthorizedRootAdmin, isAuthorized, isAuthorizedBelowAdmin } from './util/security';
 import { setUserArray } from './api/redis-users';
 const redisOptions = {
-    // password: REDIS_PASSWORD
+    password: REDIS_PASSWORD
 };
 export const REDIS_CLIENT = redis.createClient(redisOptions);
 const app = express();
