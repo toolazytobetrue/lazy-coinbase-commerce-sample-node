@@ -33,6 +33,7 @@ export const updateService = async (req: Request, res: Response, next: NextFunct
         }
 
         service.title = req.body.title;
+        service.type = req.body.type;
         service.price = +round(req.body.price, 2);
         service.description = req.body.description;
         service.img = isEmptyOrNull(req.body.img) ? null : req.body.img;

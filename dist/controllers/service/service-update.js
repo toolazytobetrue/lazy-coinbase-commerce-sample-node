@@ -41,6 +41,7 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return res.status(404).send("Service not found");
         }
         service.title = req.body.title;
+        service.type = req.body.type;
         service.price = +mathjs_1.round(req.body.price, 2);
         service.description = req.body.description;
         service.img = utils_1.isEmptyOrNull(req.body.img) ? null : req.body.img;
