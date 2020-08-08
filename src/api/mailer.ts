@@ -20,7 +20,6 @@ export const sendMail = (recipient: string, subject: string, html: string) => {
     });
 }
 
-
 export const sendErrorMail = async (content: string) => {
     sendMail('devhassanjawhar@gmail.com', `${WEBSITE_NAME} API Error`, content)
 }
