@@ -27,6 +27,9 @@ exports.updateAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (utils_1.isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Account price is missing");
         }
+        if (isNaN(req.body.type) || +req.body.type <= 0 || +req.body.type > 9) {
+            return res.status(400).send("Account type is not valid");
+        }
         if (isNaN(req.body.price)) {
             return res.status(400).send("Account price is not a number");
         }
@@ -46,6 +49,7 @@ exports.updateAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!account) {
             return res.status(404).send("Account not found");
         }
+        account.type = +req.body.type;
         account.title = req.body.title;
         account.images = req.body.images;
         account.price = +mathjs_1.round(req.body.price, 2);

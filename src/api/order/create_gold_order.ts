@@ -8,7 +8,7 @@ import { isEmptyOrNull, generateUuid } from '../../util/utils';
 import { User, UserDocument } from '../../models/user/user.model';
 import { OrderStatus } from '../../models/enums/OrderStatus.enum';
 import { CouponDocument } from '../../models/sales/coupon.model';
-export async function transactionCreateGoldOrder(goldType: string, units: number, stock: StockDocument, paymentGateway: PaymentGatewayDocument, rsn: string, coupon: null | undefined | CouponDocument, ipAddress: string, userId?: string) {
+export async function transactionCreateGoldOrder(goldType: string, units: number, stock: StockDocument, paymentGateway: PaymentGatewayDocument, rsn: string, combat: number, coupon: null | undefined | CouponDocument, ipAddress: string, userId?: string) {
     try {
         if (!userId && paymentGateway.requiresLogin) {
             throw new Error("Payment gateway requires authentication")
@@ -45,13 +45,14 @@ export async function transactionCreateGoldOrder(goldType: string, units: number
                 units,
                 server: goldType === 'oldschool' ? 1 : 2,
                 stock,
-                rsn
+                rsn,
+                combat
             }
         };
 
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn}`);
+                const coinbaseCharge = await createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,

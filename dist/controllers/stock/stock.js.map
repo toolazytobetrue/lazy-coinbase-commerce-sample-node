@@ -1,1 +1,1 @@
-{"version":3,"file":"stock.js","sourceRoot":"","sources":["../../../src/controllers/stock/stock.ts"],"names":[],"mappings":";;;AAAA,6CAA+C;AAK3C,gGALK,4BAAe,OAKL;AAJnB,iDAA6C;AAGzC,4FAHK,0BAAW,OAGL"}
+{"version":3,"file":"stock.js","sourceRoot":"","sources":["../../../src/controllers/stock/stock.ts"],"names":[],"mappings":";;;AAAA,6CAA+C;AAM3C,gGANK,4BAAe,OAML;AALnB,iDAA6C;AAIzC,4FAJK,0BAAW,OAIL;AAHf,2CAA2D;AAKvD,+FALK,0BAAc,OAKL;AACd,6FANqB,wBAAY,OAMrB"}

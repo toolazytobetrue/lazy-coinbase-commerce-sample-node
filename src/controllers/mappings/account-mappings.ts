@@ -6,6 +6,7 @@ export const mapToAccountDocument = (account: AccountDocument) => {
         title: account.title,
         description: account.description,
         images: account.images,
+        type: account.type,
         price: account.price,
         stock: account.stock,
         dateCreated: account.dateCreated,

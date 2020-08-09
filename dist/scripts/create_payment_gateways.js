@@ -29,6 +29,13 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true })
             img: 'crypto.png',
             enabled: true,
             fees: 0
+        },
+        {
+            name: 'gold',
+            requiresLogin: false,
+            img: 'gold.png',
+            enabled: true,
+            fees: 0
         }
     ];
     const available_payment_gateways = yield payment_gateway_model_1.PaymentGateway.find();
@@ -44,11 +51,13 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true })
                 requiresLogin: p.requiresLogin,
                 fees: p.fees
             }).save();
+            console.log('Successfully created paymentgateway');
         }
         else {
             payment_gateway = available_payment_gateways[available_payment_gateways.map(_ => _.name).indexOf(p.name)];
+            console.log('Successfully used existing paymentgateway');
         }
-        const available_stock = available_stocks.find(_ => payment_gateway._id === _.paymentgateway);
+        const available_stock = available_stocks.find(_ => `${payment_gateway._id}` === `${_.paymentgateway}`);
         if (!available_stock) {
             const stock = yield (new stock_model_1.Stock({
                 dateCreated: new Date(),

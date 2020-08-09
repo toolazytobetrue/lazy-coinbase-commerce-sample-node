@@ -95,6 +95,7 @@ app.get('/api/order/gold', isAuthorizedBelowAdmin, orderController.readGoldOrder
 app.get('/api/order/account', isAuthorizedBelowAdmin, orderController.readAccountOrders);
 app.get('/api/order/services', isAuthorizedBelowAdmin, orderController.readServicesOrders);
 app.get('/api/order/:orderId', orderController.readOrder);
+app.delete('/api/order/:orderId', orderController.deleteOrder);
 
 app.put('/api/order/:orderId/gold', isAuthorizedRootAdmin, orderController.updateGoldOrder);
 app.put('/api/order/:orderId/account', isAuthorizedRootAdmin, orderController.updateAccountOrder);
@@ -107,6 +108,7 @@ app.post('/api/order/:orderId/request', isAuthorizedBelowAdmin, orderController.
  */
 
 app.put('/api/stock', isAuthorizedRootAdmin, stockController.updateStock);
+app.put('/api/rate', isAuthorizedRootAdmin, stockController.updateSwapRate);
 
 app.post('/api/account', isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/skill', isAuthorizedRootAdmin, skillController.createSkill);
@@ -142,6 +144,7 @@ app.delete('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.dele
  * Public API endpoints
  */
 app.get('/api/stock', stockController.readLatestStock);
+app.get('/api/rate', stockController.readSwapRate);
 
 app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);

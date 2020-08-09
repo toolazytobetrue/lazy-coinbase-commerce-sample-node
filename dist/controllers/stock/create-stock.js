@@ -15,6 +15,9 @@ const stock_model_1 = require("../../models/sales/stock.model");
 const mathjs_1 = require("mathjs");
 exports.updateStock = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (utils_1.isEmptyOrNull(req.body.stockId)) {
+            return res.status(400).send("Stock id is missing");
+        }
         if (utils_1.isEmptyOrNull(req.body.osrs.units) || isNaN(+req.body.osrs.units)) {
             return res.status(400).send("OSRS units is missing");
         }
@@ -33,23 +36,9 @@ exports.updateStock = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (+req.body.rs3.selling <= 0) {
             return res.status(400).send("OSRS Selling price cannot be zero or negative");
         }
-        // if (isEmptyOrNull(req.body.osrs.buying) || isNaN(+req.body.osrs.buying)) {
-        //     return res.status(400).send("OSRS buying price is missing")
-        // }
-        // if (+req.body.osrs.buying <= 0) {
-        //     return res.status(400).send("OSRS buying price cannot be zero or negative")
-        // }
-        // if (isEmptyOrNull(req.body.rs3.buying) || isNaN(+req.body.rs3.buying)) {
-        //     return res.status(400).send("RS3 buying price is missing")
-        // }
-        // if (+req.body.rs3.buying <= 0) {
-        //     return res.status(400).send("RS3 buying price cannot be zero or negative")
-        // }
-        const latestStock = yield stock_model_1.Stock.findOne()
-            .sort({ dateCreated: -1 })
-            .populate('paymentgateway');
+        const latestStock = yield stock_model_1.Stock.findOne({ _id: req.body.stockId }).populate('paymentgateway');
         if (!latestStock) {
-            return res.status(400).send("Last stock prices not found");
+            return res.status(400).send("Stock price for this payment gateway was not found");
         }
         latestStock.rs3.selling = +mathjs_1.round(req.body.rs3.selling, 2);
         latestStock.rs3.units = +mathjs_1.round(req.body.rs3.units, 2);

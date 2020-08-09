@@ -18,12 +18,15 @@ export const updateAccount = async (req: Request, res: Response, next: NextFunct
         if (isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Account price is missing")
         }
+        if (isNaN(req.body.type) || +req.body.type <= 0 || +req.body.type > 9) {
+            return res.status(400).send("Account type is not valid")
+        }
         if (isNaN(req.body.price)) {
             return res.status(400).send("Account price is not a number")
         }
         if (+req.body.price <= 0) {
             return res.status(400).send("Account price cannot be zero or negative")
-        } 
+        }
 
         if (isNaN(+req.body.stock) || !Number.isInteger(+req.body.stock)) {
             return res.status(400).send("Account stock is not a number")
@@ -41,6 +44,7 @@ export const updateAccount = async (req: Request, res: Response, next: NextFunct
             return res.status(404).send("Account not found");
         }
 
+        account.type = +req.body.type;
         account.title = req.body.title;
         account.images = req.body.images;
         account.price = +round(req.body.price, 2);

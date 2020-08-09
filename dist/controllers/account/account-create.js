@@ -24,6 +24,9 @@ exports.createAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (utils_1.isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Account price is missing");
         }
+        if (isNaN(req.body.type) || +req.body.type <= 0 || +req.body.type > 9) {
+            return res.status(400).send("Account type is not valid");
+        }
         if (isNaN(req.body.price)) {
             return res.status(400).send("Account price is not a number");
         }
@@ -40,6 +43,7 @@ exports.createAccount = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return res.status(400).send("Images request is empty or not an array");
         }
         const account = yield (new account_model_1.Account({
+            type: +req.body.type,
             title: req.body.title,
             description: req.body.description ? req.body.description : '',
             images: req.body.images,

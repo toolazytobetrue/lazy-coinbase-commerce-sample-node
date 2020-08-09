@@ -16,7 +16,7 @@ const create_coinbase_invoice_1 = require("../../controllers/invoice/create-coin
 const utils_1 = require("../../util/utils");
 const user_model_1 = require("../../models/user/user.model");
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
-function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn, coupon, ipAddress, userId) {
+function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn, combat, coupon, ipAddress, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -50,12 +50,13 @@ function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn,
                     units,
                     server: goldType === 'oldschool' ? 1 : 2,
                     stock,
-                    rsn
+                    rsn,
+                    combat
                 }
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

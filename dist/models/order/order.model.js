@@ -32,7 +32,8 @@ exports.GoldSchema = new mongoose_1.default.Schema({
     units: { type: Number, required: true },
     server: { type: Number, required: true },
     stock: { type: stock_model_1.Stock.schema, required: true },
-    rsn: { type: String, required: true }
+    rsn: { type: String, required: true },
+    combat: { type: Number, required: true }
 });
 exports.Gold = mongoose_1.default.model('Gold', exports.GoldSchema);
 exports.OrderSchema = new mongoose_1.default.Schema({

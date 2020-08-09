@@ -5,6 +5,7 @@ export type AccountDocument = mongoose.Document & {
     description?: string;
     images: string[];
     price: number;
+    type: number;
     stock: number;
     dateCreated: Date;
     lastUpdated: Date;
@@ -15,6 +16,7 @@ const AccountSchema = new mongoose.Schema({
     description: { type: String, required: false },
     images: { type: [String], required: true },
     price: { type: Number, required: true },
+    type: { type: Number, required: true },
     stock: { type: Number, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date

@@ -15,6 +15,9 @@ export const createAccount = async (req: Request, res: Response, next: NextFunct
         if (isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Account price is missing")
         }
+        if (isNaN(req.body.type) || +req.body.type <= 0 || +req.body.type > 9) {
+            return res.status(400).send("Account type is not valid")
+        }
         if (isNaN(req.body.price)) {
             return res.status(400).send("Account price is not a number")
         }
@@ -33,6 +36,7 @@ export const createAccount = async (req: Request, res: Response, next: NextFunct
         }
 
         const account = await (new Account({
+            type: +req.body.type,
             title: req.body.title,
             description: req.body.description ? req.body.description : '',
             images: req.body.images,

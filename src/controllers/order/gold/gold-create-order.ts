@@ -44,6 +44,12 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
         if (isEmptyOrNull(req.body.rsn)) {
             return res.status(400).send("RSN is missing");
         }
+        if (isEmptyOrNull(+req.body.combat)) {
+            return res.status(400).send("Combat level is missing");
+        }
+        if (isNaN(+req.body.combat) || !Number.isInteger(+req.body.combat) || +req.body.combat < 3 || +req.body.combat > 126) {
+            return res.status(400).send("Combat level needs to be between 3 & 126");
+        }
         if (req.body.rsn.length > 12) {
             return res.status(400).send("RSN cannot exceed 12 characters");
         }
@@ -95,7 +101,7 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
                 rsn += _rsn[i]
             }
         }
-        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, rsn, coupon, userIpAddress, userId);
+        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, rsn, +req.body.combat, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     } catch (err) {
         logDetails('error', `Error creating an order ${err}`);

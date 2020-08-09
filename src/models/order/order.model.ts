@@ -12,13 +12,15 @@ export type GoldDocument = mongoose.Document & {
     server: number;
     stock: StockDocument;
     rsn: string;
+    combat: number;
 }
 
 export const GoldSchema = new mongoose.Schema({
     units: { type: Number, required: true },
     server: { type: Number, required: true },
     stock: { type: Stock.schema, required: true },
-    rsn: { type: String, required: true }
+    rsn: { type: String, required: true },
+    combat: { type: Number, required: true }
 })
 
 export const Gold = mongoose.model<GoldDocument>('Gold', GoldSchema);

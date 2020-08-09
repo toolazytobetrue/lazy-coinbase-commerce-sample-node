@@ -47,7 +47,8 @@ exports.mapToOrderGoldDocument = (goldDoc) => {
         units: goldDoc.units,
         server: goldDoc.server,
         stock: all_1.mapToStock(goldDoc.stock),
-        rsn: goldDoc.rsn
+        rsn: goldDoc.rsn,
+        combat: goldDoc.combat
     };
 };
 //# sourceMappingURL=gold-mappings.js.map

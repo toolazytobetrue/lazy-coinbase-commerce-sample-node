@@ -9,24 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readLatestStock = void 0;
+exports.readOrder = void 0;
 const utils_1 = require("../../util/utils");
-const stock_model_1 = require("../../models/sales/stock.model");
-const all_1 = require("../mappings/all");
-exports.readLatestStock = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const order_model_1 = require("../../models/order/order.model");
+const gold_mappings_1 = require("../mappings/gold-mappings");
+exports.readOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const _latestStock = yield stock_model_1.Stock.find()
-            .sort({ dateCreated: -1 })
-            .populate('paymentgateway');
-        // if (!latestStock) {
-        //     return res.status(400).send("Last stock prices not found");
-        // }
-        const latestStock = _latestStock.map(_ => all_1.mapToStock(_));
-        return res.status(200).send(latestStock);
+        if (utils_1.isEmptyOrNull(req.params.orderId)) {
+            return res.status(400).send("Order id is missing");
+        }
+        const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
+        if (authorizedUser === null) {
+            return res.status(401).send("Unauthorized access");
+        }
+        const order = yield order_model_1.Order.findById(req.params.orderId);
+        if (!order) {
+            return res.status(404).send("Order not found");
+        }
+        return res.status(200).json(gold_mappings_1.mapToOrderDocument(order));
     }
     catch (err) {
         utils_1.logDetails('error', `Error reading orders: ${err}`);
         return res.status(500).send('Failed to read orders');
     }
 });
-//# sourceMappingURL=read-stock.js.map
+//# sourceMappingURL=order-read copy.js.map

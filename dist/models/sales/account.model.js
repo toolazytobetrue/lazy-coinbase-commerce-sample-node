@@ -10,6 +10,7 @@ const AccountSchema = new mongoose_1.default.Schema({
     description: { type: String, required: false },
     images: { type: [String], required: true },
     price: { type: Number, required: true },
+    type: { type: Number, required: true },
     stock: { type: Number, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date

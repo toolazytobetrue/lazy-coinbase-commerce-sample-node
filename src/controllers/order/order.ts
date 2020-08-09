@@ -9,12 +9,14 @@ import { updateAccountOrder } from "./account/account-update-order";
 import { updateGoldOrder } from "./gold/gold-update-order";
 import { readServicesOrders } from "./services/services-read-orders";
 import { updateServicesOrder } from "./services/services-update-order";
+import { deleteOrder } from "./order-delete";
 
 export {
     createGoldOrder,
     createAccountOrder,
     createServicesOrder,
     readOrder,
+    deleteOrder,
     updateAccountOrder,
     updateGoldOrder,
     requestOrder,

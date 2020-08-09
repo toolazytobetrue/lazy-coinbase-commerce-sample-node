@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateServicesOrder = exports.readServicesOrders = exports.readAccountOrders = exports.readGoldOrders = exports.requestOrder = exports.updateGoldOrder = exports.updateAccountOrder = exports.readOrder = exports.createServicesOrder = exports.createAccountOrder = exports.createGoldOrder = void 0;
+exports.updateServicesOrder = exports.readServicesOrders = exports.readAccountOrders = exports.readGoldOrders = exports.requestOrder = exports.updateGoldOrder = exports.updateAccountOrder = exports.deleteOrder = exports.readOrder = exports.createServicesOrder = exports.createAccountOrder = exports.createGoldOrder = void 0;
 const gold_create_order_1 = require("./gold/gold-create-order");
 Object.defineProperty(exports, "createGoldOrder", { enumerable: true, get: function () { return gold_create_order_1.createGoldOrder; } });
 const account_create_order_1 = require("./account/account-create-order");
@@ -23,4 +23,6 @@ const services_read_orders_1 = require("./services/services-read-orders");
 Object.defineProperty(exports, "readServicesOrders", { enumerable: true, get: function () { return services_read_orders_1.readServicesOrders; } });
 const services_update_order_1 = require("./services/services-update-order");
 Object.defineProperty(exports, "updateServicesOrder", { enumerable: true, get: function () { return services_update_order_1.updateServicesOrder; } });
+const order_delete_1 = require("./order-delete");
+Object.defineProperty(exports, "deleteOrder", { enumerable: true, get: function () { return order_delete_1.deleteOrder; } });
 //# sourceMappingURL=order.js.map

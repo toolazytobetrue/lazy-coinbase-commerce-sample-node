@@ -10,7 +10,7 @@ export const readAccounts = async (req: Request, res: Response, next: NextFuncti
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
- 
+
         const query = {}
         const accounts = await Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
@@ -37,8 +37,17 @@ export const readAvailableAccounts = async (req: Request, res: Response, next: N
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
+        let query = {}
+        if (req.query.types !== 'null' && !isEmptyOrNull(req.query.types)) {
+            const _accountTypes = req.query.types.includes(',') ? req.query.types.split(',') : [...req.query.types]
+            let accountTypes = _accountTypes.map((x: string) => +x);
+            query = {
+                type: {
+                    $in: accountTypes
+                }
+            }
+        }
 
-        const query = {}
         const accounts = await Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
