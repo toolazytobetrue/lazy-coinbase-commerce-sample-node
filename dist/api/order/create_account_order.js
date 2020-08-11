@@ -16,7 +16,8 @@ const create_coinbase_invoice_1 = require("../../controllers/invoice/create-coin
 const utils_1 = require("../../util/utils");
 const user_model_1 = require("../../models/user/user.model");
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
-function transactionCreateAccountOrder(paymentGateway, account, userId, coupon, ipAddress) {
+const app_1 = require("../../app");
+function transactionCreateAccountOrder(currency, paymentGateway, account, userId, coupon, ipAddress) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -32,6 +33,7 @@ function transactionCreateAccountOrder(paymentGateway, account, userId, coupon, 
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;
             const totalDiscounted = +mathjs_1.round(total * ratio, 2);
+            const totalDiscountedCurrency = +mathjs_1.round(totalDiscounted * app_1.RATES_MINIFIED[currency], 2);
             const uuid = utils_1.generateUuid();
             let _order = {
                 uuid,
@@ -47,7 +49,7 @@ function transactionCreateAccountOrder(paymentGateway, account, userId, coupon, 
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Account #: ${account._id}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Account #: ${account._id}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

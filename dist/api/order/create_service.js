@@ -19,7 +19,8 @@ const powerleveling_model_1 = require("../../models/sales/powerleveling.model");
 const serviceminigame_model_1 = require("../../models/sales/serviceminigame.model");
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
 const secrets_1 = require("../../util/secrets");
-function transactionCreateServicesOrder(paymentGateway, services = [], powerleveling = [], userId, coupon, ipAddress) {
+const app_1 = require("../../app");
+function transactionCreateServicesOrder(currency, paymentGateway, services = [], powerleveling = [], userId, coupon, ipAddress) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -66,6 +67,7 @@ function transactionCreateServicesOrder(paymentGateway, services = [], powerleve
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;
             const totalDiscounted = +mathjs_1.round(total * ratio, 2);
+            const totalDiscountedCurrency = +mathjs_1.round(totalDiscounted * app_1.RATES_MINIFIED[currency], 2);
             const uuid = utils_1.generateUuid();
             let _order = {
                 uuid,
@@ -82,7 +84,7 @@ function transactionCreateServicesOrder(paymentGateway, services = [], powerleve
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

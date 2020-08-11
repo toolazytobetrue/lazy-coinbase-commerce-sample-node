@@ -8,7 +8,8 @@ import { User } from '../../models/user/user.model';
 import { AccountDocument } from '../../models/sales/account.model';
 import { OrderStatus } from '../../models/enums/OrderStatus.enum';
 import { CouponDocument } from '../../models/sales/coupon.model';
-export async function transactionCreateAccountOrder(paymentGateway: PaymentGatewayDocument, account: AccountDocument, userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
+import { RATES_MINIFIED } from '../../app';
+export async function transactionCreateAccountOrder(currency: string, paymentGateway: PaymentGatewayDocument, account: AccountDocument, userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
     try {
         if (!userId && paymentGateway.requiresLogin) {
             throw new Error("Payment gateway requires authentication")
@@ -25,6 +26,7 @@ export async function transactionCreateAccountOrder(paymentGateway: PaymentGatew
         const percentage = 100 - (coupon ? coupon.amount : 0);
         const ratio = percentage / 100;
         const totalDiscounted = +round(total * ratio, 2);
+        const totalDiscountedCurrency = +round(totalDiscounted * RATES_MINIFIED[currency], 2)
 
         const uuid = generateUuid();
         let _order: any = {
@@ -42,7 +44,7 @@ export async function transactionCreateAccountOrder(paymentGateway: PaymentGatew
 
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Account #: ${account._id}`);
+                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Account #: ${account._id}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,

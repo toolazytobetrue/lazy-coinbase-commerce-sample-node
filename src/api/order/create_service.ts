@@ -12,7 +12,8 @@ import { ServiceMinigame, ServiceMinigameDocument } from '../../models/sales/ser
 import { OrderStatus } from '../../models/enums/OrderStatus.enum';
 import { MIN_SERVICES_ORDER } from '../../util/secrets';
 import { CouponDocument } from '../../models/sales/coupon.model';
-export async function transactionCreateServicesOrder(paymentGateway: PaymentGatewayDocument, services: ServiceDocument[] = [], powerleveling: { skill: SkillDocument, fromLevel: number, toLevel: number, price: number, dateCreated: Date, totalXp: number }[] = [], userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
+import { RATES_MINIFIED } from '../../app';
+export async function transactionCreateServicesOrder(currency: string, paymentGateway: PaymentGatewayDocument, services: ServiceDocument[] = [], powerleveling: { skill: SkillDocument, fromLevel: number, toLevel: number, price: number, dateCreated: Date, totalXp: number }[] = [], userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
     try {
         if (!userId && paymentGateway.requiresLogin) {
             throw new Error("Payment gateway requires authentication")
@@ -66,6 +67,7 @@ export async function transactionCreateServicesOrder(paymentGateway: PaymentGate
         const percentage = 100 - (coupon ? coupon.amount : 0);
         const ratio = percentage / 100;
         const totalDiscounted = +round(total * ratio, 2);
+        const totalDiscountedCurrency = +round(totalDiscounted * RATES_MINIFIED[currency], 2)
 
         const uuid = generateUuid();
         let _order: any = {
@@ -84,7 +86,7 @@ export async function transactionCreateServicesOrder(paymentGateway: PaymentGate
 
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
+                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,

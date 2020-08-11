@@ -29,6 +29,12 @@ exports.createServicesOrder = (req, res, next) => __awaiter(void 0, void 0, void
         if (!paymentGateway) {
             return res.status(404).send("Payment gateway not found");
         }
+        if (utils_1.isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found");
+        }
         const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
         if (authorizedUser !== null) {
             userId = authorizedUser.id;
@@ -125,7 +131,7 @@ exports.createServicesOrder = (req, res, next) => __awaiter(void 0, void 0, void
             });
         }
         if (powerleveling.length > 0 || services.length > 0) {
-            const genericTransaction = yield create_service_1.transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
+            const genericTransaction = yield create_service_1.transactionCreateServicesOrder(req.body.currency, paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
             return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
         }
         else {

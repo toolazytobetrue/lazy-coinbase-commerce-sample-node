@@ -18,11 +18,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Webhook = exports.Client = exports.Charge = exports.REDIS_CLIENT = void 0;
+exports.safeGetCurrencies = exports.Webhook = exports.Client = exports.Charge = exports.REDIS_CLIENT = exports.RATES_MINIFIED = void 0;
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -45,6 +54,9 @@ const express_xml_bodyparser_1 = __importDefault(require("express-xml-bodyparser
 const redis_1 = __importDefault(require("redis"));
 const security_1 = require("./util/security");
 const redis_users_1 = require("./api/redis-users");
+const currency_converter_1 = require("./api/currency-converter");
+const currenciesController = __importStar(require("./controllers/currencies"));
+exports.RATES_MINIFIED = {};
 const redisOptions = {
     password: secrets_1.REDIS_PASSWORD
 };
@@ -62,15 +74,35 @@ mongoose_1.default.connect(mongoUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
-    .then(() => {
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Successfully connected to mongodb');
     redis_users_1.setUserArray(exports.REDIS_CLIENT, '[]');
-})
+    yield exports.safeGetCurrencies();
+}))
     .catch((err) => {
     console.log(err);
     utils_1.logDetails('error', 'MongoDB connection error. Please make sure MongoDB is running. ' + err);
     process.exit(1);
 });
+exports.safeGetCurrencies = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield currency_converter_1.getCurrencies();
+        const body = JSON.parse(response);
+        exports.RATES_MINIFIED = {
+            USD: 1,
+            EUR: body['quotes']['USDEUR'],
+            CAD: body['quotes']['USDCAD'],
+            CNY: body['quotes']['USDCNY'],
+            NZD: body['quotes']['USDNZD']
+        };
+    }
+    catch (err) {
+        utils_1.logDetails('error', 'Failed to load currencies' + err);
+    }
+});
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield exports.safeGetCurrencies();
+}), 60 * 60 * 1000 * 6);
 app.set('port', process.env.PORT || 3000);
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -140,6 +172,7 @@ app.get('/api/stock', stockController.readLatestStock);
 app.get('/api/rate', stockController.readSwapRate);
 app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
+app.get('/api/currencies', currenciesController.readCurrencies);
 /**
  * Payment Webhooks API endpoints
  */

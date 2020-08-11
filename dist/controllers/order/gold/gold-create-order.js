@@ -24,6 +24,12 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         if (utils_1.isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
         }
+        if (utils_1.isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found");
+        }
         const paymentGateway = yield payment_gateway_model_1.PaymentGateway.findById(req.body.paymentGatewayId);
         if (!paymentGateway) {
             return res.status(404).send("Payment gateway not found");
@@ -37,7 +43,10 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 return res.status(401).send("Unauthorized access");
             }
         }
-        const latestStock = yield stock_model_1.Stock.findOne().sort({ dateCreated: -1 });
+        const latestStock = yield stock_model_1.Stock.findOne({ paymentgateway: req.body.paymentGatewayId });
+        if (!latestStock) {
+            throw new Error("Last stock prices not found");
+        }
         if (utils_1.isEmptyOrNull(req.body.units) || isNaN(+req.body.units) || +req.body.units <= 0) {
             return res.status(400).send("Amount to purchase is invalid");
         }
@@ -58,9 +67,6 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
         if (req.body.rsn.length > 12) {
             return res.status(400).send("RSN cannot exceed 12 characters");
-        }
-        if (!latestStock) {
-            throw new Error("Last stock prices not found");
         }
         let units = +mathjs_1.round(req.body.units, 2);
         let unitPrice = 0;
@@ -103,7 +109,7 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 rsn += _rsn[i];
             }
         }
-        const order = yield create_gold_order_1.transactionCreateGoldOrder(req.body.type, +mathjs_1.round(req.body.units, 2), latestStock, paymentGateway, rsn, +req.body.combat, coupon, userIpAddress, userId);
+        const order = yield create_gold_order_1.transactionCreateGoldOrder(req.body.currency, req.body.type, +mathjs_1.round(req.body.units, 2), latestStock, paymentGateway, rsn, +req.body.combat, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     }
     catch (err) {

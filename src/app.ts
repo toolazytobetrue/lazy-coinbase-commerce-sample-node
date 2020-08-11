@@ -20,6 +20,10 @@ import xmlparser from 'express-xml-bodyparser';
 import redis from 'redis';
 import { isAuthorizedRootAdmin, isAuthorized, isAuthorizedBelowAdmin } from './util/security';
 import { setUserArray } from './api/redis-users';
+import { getCurrencies } from './api/currency-converter';
+import * as currenciesController from './controllers/currencies';
+export let RATES_MINIFIED: any = {}
+
 const redisOptions = {
     password: REDIS_PASSWORD
 };
@@ -40,9 +44,10 @@ mongoose.connect(mongoUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
-    .then(() => {
+    .then(async () => {
         console.log('Successfully connected to mongodb');
         setUserArray(REDIS_CLIENT, '[]');
+        await safeGetCurrencies();
     })
     .catch((err: string) => {
         console.log(err)
@@ -50,6 +55,28 @@ mongoose.connect(mongoUrl, {
         process.exit(1);
     });
 
+
+
+export const safeGetCurrencies = async () => {
+    try {
+        const response = await getCurrencies();
+        const body = JSON.parse(response);
+        RATES_MINIFIED = {
+            USD: 1,
+            EUR: body['quotes']['USDEUR'],
+            CAD: body['quotes']['USDCAD'],
+            CNY: body['quotes']['USDCNY'],
+            NZD: body['quotes']['USDNZD']
+        }
+
+    } catch (err) {
+        logDetails('error', 'Failed to load currencies' + err);
+    }
+};
+
+setInterval(async () => {
+    await safeGetCurrencies();
+}, 60 * 60 * 1000 * 6);
 
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
@@ -148,6 +175,7 @@ app.get('/api/rate', stockController.readSwapRate);
 
 app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
+app.get('/api/currencies', currenciesController.readCurrencies);
 
 /**
  * Payment Webhooks API endpoints

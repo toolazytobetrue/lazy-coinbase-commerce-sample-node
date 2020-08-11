@@ -15,6 +15,14 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
             return res.status(400).send("Payment type is missing");
         }
 
+        if (isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found")
+        }
+
         const paymentGateway = await PaymentGateway.findById(req.body.paymentGatewayId);
         if (!paymentGateway) {
             return res.status(404).send("Payment gateway not found");
@@ -31,7 +39,11 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
             }
         }
 
-        const latestStock = await Stock.findOne().sort({ dateCreated: -1 });
+        const latestStock = await Stock.findOne({ paymentgateway: req.body.paymentGatewayId });
+        if (!latestStock) {
+            throw new Error("Last stock prices not found");
+        }
+
         if (isEmptyOrNull(req.body.units) || isNaN(+req.body.units) || +req.body.units <= 0) {
             return res.status(400).send("Amount to purchase is invalid");
         }
@@ -52,9 +64,6 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
         }
         if (req.body.rsn.length > 12) {
             return res.status(400).send("RSN cannot exceed 12 characters");
-        }
-        if (!latestStock) {
-            throw new Error("Last stock prices not found");
         }
 
         let units = +round(req.body.units, 2);
@@ -101,7 +110,7 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
                 rsn += _rsn[i]
             }
         }
-        const order = await transactionCreateGoldOrder(req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, rsn, +req.body.combat, coupon, userIpAddress, userId);
+        const order = await transactionCreateGoldOrder(req.body.currency, req.body.type, +round(req.body.units, 2), latestStock, paymentGateway, rsn, +req.body.combat, coupon, userIpAddress, userId);
         return res.status(200).json({ redirect_url: order.redirect_url });
     } catch (err) {
         logDetails('error', `Error creating an order ${err}`);

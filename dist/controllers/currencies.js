@@ -9,26 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCoinbaseInvoice = void 0;
-const utils_1 = require("../../util/utils");
-const app_1 = require("../../app");
-exports.createCoinbaseInvoice = (currency, orderId, totalAmount, name, description) => __awaiter(void 0, void 0, void 0, function* () {
+exports.readCurrencies = void 0;
+const utils_1 = require("../util/utils");
+const app_1 = require("../app");
+exports.readCurrencies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let chargeData = {
-            'name': name,
-            'description': description,
-            'local_price': {
-                'amount': `${+totalAmount}`,
-                'currency': currency
-            },
-            'pricing_type': 'fixed_price',
-            'redirect_url': utils_1.getOrderUrl(orderId)
-        };
-        const invoice = yield app_1.Charge.create(chargeData);
-        return Promise.resolve(invoice);
+        return res.status(200).json(app_1.RATES_MINIFIED);
     }
     catch (err) {
-        return Promise.reject(err);
+        utils_1.logDetails('error', `Error reading currencies: ${err}`);
+        return res.status(500).send('Something wrong happened');
     }
 });
-//# sourceMappingURL=create-coinbase-invoice.js.map
+//# sourceMappingURL=currencies.js.map

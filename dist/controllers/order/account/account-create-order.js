@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createAccountOrder = void 0;
 const utils_1 = require("../../../util/utils");
 const payment_gateway_model_1 = require("../../../models/entities/payment-gateway.model");
-// import { transactionCreateAccountOrder } from '../../../api/order/create_transaction_order_account';
 const account_model_1 = require("../../../models/sales/account.model");
 const coupon_model_1 = require("../../../models/sales/coupon.model");
 const create_account_order_1 = require("../../../api/order/create_account_order");
@@ -22,6 +21,12 @@ exports.createAccountOrder = (req, res, next) => __awaiter(void 0, void 0, void 
         let userId = null;
         if (utils_1.isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
+        }
+        if (utils_1.isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found");
         }
         const paymentGateway = yield payment_gateway_model_1.PaymentGateway.findById(req.body.paymentGatewayId);
         if (!paymentGateway) {
@@ -59,7 +64,7 @@ exports.createAccountOrder = (req, res, next) => __awaiter(void 0, void 0, void 
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const genericTransaction = yield create_account_order_1.transactionCreateAccountOrder(paymentGateway, account, userId, coupon, userIpAddress);
+        const genericTransaction = yield create_account_order_1.transactionCreateAccountOrder(req.body.currency, paymentGateway, account, userId, coupon, userIpAddress);
         return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
     }
     catch (err) {

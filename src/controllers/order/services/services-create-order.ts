@@ -21,6 +21,14 @@ export const createServicesOrder = async (req: Request, res: Response, next: Nex
             return res.status(404).send("Payment gateway not found");
         }
 
+        if (isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found")
+        }
+
         const authorizedUser: any = getAuthorizedUser(req, res, next);
         if (authorizedUser !== null) {
             userId = authorizedUser.id;
@@ -125,7 +133,7 @@ export const createServicesOrder = async (req: Request, res: Response, next: Nex
         }
 
         if (powerleveling.length > 0 || services.length > 0) {
-            const genericTransaction = await transactionCreateServicesOrder(paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
+            const genericTransaction = await transactionCreateServicesOrder(req.body.currency, paymentGateway, services, powerleveling, userId, coupon, userIpAddress);
             return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
         } else {
             return res.status(404).send("You need to at least choose 1 service (powerleveling/minigame/quest)")

@@ -16,7 +16,8 @@ const create_coinbase_invoice_1 = require("../../controllers/invoice/create-coin
 const utils_1 = require("../../util/utils");
 const user_model_1 = require("../../models/user/user.model");
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
-function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn, combat, coupon, ipAddress, userId) {
+const app_1 = require("../../app");
+function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGateway, rsn, combat, coupon, ipAddress, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -31,10 +32,13 @@ function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn,
             if (utils_1.isEmptyOrNull(rsn)) {
                 throw new Error("RSN is required");
             }
-            const total = +mathjs_1.round(units * (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling), 2);
+            const _price = (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling);
+            const price = _price * app_1.RATES_MINIFIED[currency];
+            const total = +mathjs_1.round(units * price, 2);
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;
             const totalDiscounted = +mathjs_1.round(total * ratio, 2);
+            const totalDiscountedCurrency = +mathjs_1.round(totalDiscounted * app_1.RATES_MINIFIED[currency], 2);
             const uuid = utils_1.generateUuid();
             let _order = {
                 uuid,
@@ -56,7 +60,7 @@ function transactionCreateGoldOrder(goldType, units, stock, paymentGateway, rsn,
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

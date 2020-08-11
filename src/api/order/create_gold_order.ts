@@ -8,7 +8,8 @@ import { isEmptyOrNull, generateUuid } from '../../util/utils';
 import { User, UserDocument } from '../../models/user/user.model';
 import { OrderStatus } from '../../models/enums/OrderStatus.enum';
 import { CouponDocument } from '../../models/sales/coupon.model';
-export async function transactionCreateGoldOrder(goldType: string, units: number, stock: StockDocument, paymentGateway: PaymentGatewayDocument, rsn: string, combat: number, coupon: null | undefined | CouponDocument, ipAddress: string, userId?: string) {
+import { RATES_MINIFIED } from '../../app';
+export async function transactionCreateGoldOrder(currency: string, goldType: string, units: number, stock: StockDocument, paymentGateway: PaymentGatewayDocument, rsn: string, combat: number, coupon: null | undefined | CouponDocument, ipAddress: string, userId?: string) {
     try {
         if (!userId && paymentGateway.requiresLogin) {
             throw new Error("Payment gateway requires authentication")
@@ -24,12 +25,13 @@ export async function transactionCreateGoldOrder(goldType: string, units: number
         if (isEmptyOrNull(rsn)) {
             throw new Error("RSN is required")
         }
-
-        const total = +round(units * (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling), 2);
+        const _price = (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling);
+        const price = _price * RATES_MINIFIED[currency]
+        const total = +round(units * price, 2);
         const percentage = 100 - (coupon ? coupon.amount : 0);
         const ratio = percentage / 100;
         const totalDiscounted = +round(total * ratio, 2);
-
+        const totalDiscountedCurrency = +round(totalDiscounted * RATES_MINIFIED[currency], 2)
         const uuid = generateUuid();
         let _order: any = {
             uuid,
@@ -49,10 +51,9 @@ export async function transactionCreateGoldOrder(goldType: string, units: number
                 combat
             }
         };
-
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
+                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,

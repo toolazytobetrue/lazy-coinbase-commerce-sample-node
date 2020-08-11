@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { isEmptyOrNull, logDetails, getAuthorizedUser } from '../../../util/utils';
 import { PaymentGateway } from '../../../models/entities/payment-gateway.model';
-// import { transactionCreateAccountOrder } from '../../../api/order/create_transaction_order_account';
 import { Account } from '../../../models/sales/account.model';
 import { CouponDocument, Coupon } from '../../../models/sales/coupon.model';
 import { transactionCreateAccountOrder } from '../../../api/order/create_account_order';
@@ -13,6 +12,14 @@ export const createAccountOrder = async (req: Request, res: Response, next: Next
         let userId = null;
         if (isEmptyOrNull(req.body.paymentGatewayId)) {
             return res.status(400).send("Payment type is missing");
+        }
+
+        if (isEmptyOrNull(req.body.currency)) {
+            return res.status(400).send("Currency is missing");
+        }
+
+        if (req.body.currency !== 'USD' && req.body.currency !== 'EUR' && req.body.currency !== 'CAD' && req.body.currency !== 'CNY' && req.body.currency !== 'NZD') {
+            return res.status(400).send("Currency not found")
         }
 
         const paymentGateway = await PaymentGateway.findById(req.body.paymentGatewayId);
@@ -54,7 +61,7 @@ export const createAccountOrder = async (req: Request, res: Response, next: Next
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
-        const genericTransaction = await transactionCreateAccountOrder(paymentGateway, account, userId, coupon, userIpAddress);
+        const genericTransaction = await transactionCreateAccountOrder(req.body.currency, paymentGateway, account, userId, coupon, userIpAddress);
         return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
 
     } catch (err) {
