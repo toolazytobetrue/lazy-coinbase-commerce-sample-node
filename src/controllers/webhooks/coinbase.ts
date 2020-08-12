@@ -6,6 +6,7 @@ import { User } from '../../models/user/user.model';
 import { Order } from '../../models/order/order.model';
 import { Stock } from '../../models/sales/stock.model';
 import { Account } from '../../models/sales/account.model';
+import { PaymentGateway } from '../../models/entities/payment-gateway.model';
 export const webhookCoinbase = async (req: Request, res: any, next: NextFunction) => {
     try {
         const headers: any = req.headers['x-cc-webhook-signature'];
@@ -39,12 +40,15 @@ export const webhookCoinbase = async (req: Request, res: any, next: NextFunction
                 }
                 if (lastTimeline.status === 'CONFIRMED') {
                     if (order.gold) {
-                        const lastStock = await Stock.findOne().sort({ dateCreated: -1 });
-                        if (lastStock) {
-                            if (order.gold.server === 1) {
-                                lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
-                            } else {
-                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                        const crypto = await PaymentGateway.findOne({ name: 'crypto' });
+                        if (crypto) {
+                            const lastStock = await Stock.findOne({ paymentgateway: crypto._id });
+                            if (lastStock) {
+                                if (order.gold.server === 1) {
+                                    lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
+                                } else {
+                                    lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                                }
                             }
                         }
                     }

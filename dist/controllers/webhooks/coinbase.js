@@ -15,6 +15,7 @@ const app_1 = require("../../app");
 const secrets_1 = require("../../util/secrets");
 const order_model_1 = require("../../models/order/order.model");
 const stock_model_1 = require("../../models/sales/stock.model");
+const payment_gateway_model_1 = require("../../models/entities/payment-gateway.model");
 exports.webhookCoinbase = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const headers = req.headers['x-cc-webhook-signature'];
@@ -46,13 +47,16 @@ exports.webhookCoinbase = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 }
                 if (lastTimeline.status === 'CONFIRMED') {
                     if (order.gold) {
-                        const lastStock = yield stock_model_1.Stock.findOne().sort({ dateCreated: -1 });
-                        if (lastStock) {
-                            if (order.gold.server === 1) {
-                                lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
-                            }
-                            else {
-                                lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                        const crypto = yield payment_gateway_model_1.PaymentGateway.findOne({ name: 'crypto' });
+                        if (crypto) {
+                            const lastStock = yield stock_model_1.Stock.findOne({ paymentgateway: crypto._id });
+                            if (lastStock) {
+                                if (order.gold.server === 1) {
+                                    lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
+                                }
+                                else {
+                                    lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                                }
                             }
                         }
                     }
