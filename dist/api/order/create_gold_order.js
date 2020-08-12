@@ -38,7 +38,6 @@ function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGat
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;
             const totalDiscounted = +mathjs_1.round(total * ratio, 2);
-            const totalDiscountedCurrency = +mathjs_1.round(totalDiscounted * app_1.RATES_MINIFIED[currency], 2);
             const uuid = utils_1.generateUuid();
             let _order = {
                 uuid,
@@ -60,7 +59,7 @@ function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGat
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

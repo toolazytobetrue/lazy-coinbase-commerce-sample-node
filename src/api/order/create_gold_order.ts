@@ -31,7 +31,6 @@ export async function transactionCreateGoldOrder(currency: string, goldType: str
         const percentage = 100 - (coupon ? coupon.amount : 0);
         const ratio = percentage / 100;
         const totalDiscounted = +round(total * ratio, 2);
-        const totalDiscountedCurrency = +round(totalDiscounted * RATES_MINIFIED[currency], 2)
         const uuid = generateUuid();
         let _order: any = {
             uuid,
@@ -53,7 +52,7 @@ export async function transactionCreateGoldOrder(currency: string, goldType: str
         };
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
+                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,
