@@ -99,6 +99,10 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 return res.status(400).send(`Coupon is disabled`);
             }
         }
+        const __rsn = req.body.rsn.replace(/\s/g, '');
+        if (utils_1.checkRSN(__rsn) === false) {
+            return res.status(400).send("RSN is invalid");
+        }
         let _rsn = req.body.rsn.toLowerCase();
         let rsn = '';
         for (let i = 0; i < _rsn.length; i++) {

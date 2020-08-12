@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOrderUrl = exports.isDbObjectId = exports.getOptionalAuthorizedUser = exports.deepClone = exports.generateUuid = exports.isAuthorizedJwt = exports.isAllowedOrderRange = exports.getAuthorizedUser = exports.logDetails = exports.generateText = exports.getAuthorization = exports.isEmptyOrNullParams = exports.isEmptyOrNull = void 0;
+exports.checkRSN = exports.getOrderUrl = exports.isDbObjectId = exports.getOptionalAuthorizedUser = exports.deepClone = exports.generateUuid = exports.isAuthorizedJwt = exports.isAllowedOrderRange = exports.getAuthorizedUser = exports.logDetails = exports.generateText = exports.getAuthorization = exports.isEmptyOrNullParams = exports.isEmptyOrNull = void 0;
 const jwt_helper_1 = require("./jwt-helper");
 const logger_1 = __importDefault(require("./logger"));
 const moment_1 = __importDefault(require("moment"));
@@ -118,4 +118,9 @@ function getOrderUrl(depositId) {
     return `${secrets_1.URL_ON_SUCCESS}?orderId=${depositId}`;
 }
 exports.getOrderUrl = getOrderUrl;
+function checkRSN(input) {
+    const rsnRegex = new RegExp(`^[a-zA-Z0-9_-]$`);
+    return rsnRegex.test(input);
+}
+exports.checkRSN = checkRSN;
 //# sourceMappingURL=utils.js.map

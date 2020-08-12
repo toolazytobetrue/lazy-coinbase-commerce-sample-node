@@ -6,6 +6,7 @@ import moment from 'moment';
 import { getCacheElement } from '../api/redis-api';
 import ObjectId from 'mongoose';
 import { URL_ON_SUCCESS } from './secrets';
+import { regexp } from 'express-xml-bodyparser';
 export function isEmptyOrNull(value: any) {
     return value === undefined || value === null || value === '';
 }
@@ -115,5 +116,10 @@ export function isDbObjectId(input: string) {
 
 export function getOrderUrl(depositId: string) {
     return `${URL_ON_SUCCESS}?orderId=${depositId}`;
+}
+
+export function checkRSN(input: string) {
+    const rsnRegex = new RegExp(`^[a-zA-Z0-9_-]$`)
+    return rsnRegex.test(input)
 }
 

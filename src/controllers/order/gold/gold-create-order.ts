@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { logDetails, isEmptyOrNull, getAuthorizedUser } from '../../../util/utils';
+import { logDetails, isEmptyOrNull, getAuthorizedUser, checkRSN } from '../../../util/utils';
 import { PaymentGateway } from '../../../models/entities/payment-gateway.model';
 import { Stock } from '../../../models/sales/stock.model';
 import { round } from 'mathjs';
@@ -99,7 +99,10 @@ export const createGoldOrder = async (req: Request, res: Response, next: NextFun
             }
         }
 
-
+        const __rsn = req.body.rsn.replace(/\s/g, '');
+        if (checkRSN(__rsn) === false) {
+            return res.status(400).send("RSN is invalid")
+        }
 
         let _rsn = req.body.rsn.toLowerCase();
         let rsn = '';
