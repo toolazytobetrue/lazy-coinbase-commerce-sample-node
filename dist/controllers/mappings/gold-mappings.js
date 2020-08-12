@@ -21,6 +21,12 @@ exports.mapToOrderDocument = (order) => {
         amount = +mathjs_1.round(order.account ? +mathjs_1.round(order.account.price, 2) : 0);
         amountWithDiscount = +mathjs_1.round(amount * ratio, 2);
     }
+    let status = order.status;
+    if (order.payment !== null && order.payment.coinbase !== null && order.payment.coinbase !== undefined && order.payment.coinbase.timeline !== null && order.payment.coinbase.timeline !== undefined) {
+        if (order.payment.coinbase.timeline.length > 0) {
+            status = order.payment.coinbase.timeline[order.payment.coinbase.timeline.length - 1].status;
+        }
+    }
     return {
         orderId: `${order._id}`,
         amount,
@@ -30,7 +36,7 @@ exports.mapToOrderDocument = (order) => {
         lastUpdated: order.lastUpdated,
         dateCreated: order.dateCreated,
         paymentGateway: all_1.mapToPaymentGateway(order.paymentGateway),
-        status: order.status,
+        status: status,
         payment: payment_mappings_1.getPayment(order),
         user: order.user ? services_mappings_1.getOrderUser(order.user) : null,
         coupon: order.coupon ? coupon_mapper_1.maptoCouponDocument(order.coupon) : null,

@@ -20,6 +20,13 @@ export const mapToOrderDocument = (order: OrderDocument) => {
         amount = +round(order.account ? +round(order.account.price, 2) : 0);
         amountWithDiscount = +round(amount * ratio, 2);
     }
+
+    let status = order.status;
+    if (order.payment !== null && order.payment.coinbase !== null && order.payment.coinbase !== undefined && order.payment.coinbase.timeline !== null && order.payment.coinbase.timeline !== undefined) {
+        if (order.payment.coinbase.timeline.length > 0) {
+            status = order.payment.coinbase.timeline[order.payment.coinbase.timeline.length - 1].status;
+        }
+    }
     return {
         orderId: `${order._id}`,
         amount,
@@ -29,7 +36,7 @@ export const mapToOrderDocument = (order: OrderDocument) => {
         lastUpdated: order.lastUpdated,
         dateCreated: order.dateCreated,
         paymentGateway: mapToPaymentGateway(order.paymentGateway),
-        status: order.status,
+        status: status,
         payment: getPayment(order),
         user: order.user ? getOrderUser(order.user) : null,
         coupon: order.coupon ? maptoCouponDocument(order.coupon) : null,
