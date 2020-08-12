@@ -25,7 +25,7 @@ import * as currenciesController from './controllers/currencies';
 export let RATES_MINIFIED: any = {}
 
 const redisOptions = {
-    // password: REDIS_PASSWORD
+    password: REDIS_PASSWORD
 };
 export const REDIS_CLIENT = redis.createClient(redisOptions);
 const app = express();
