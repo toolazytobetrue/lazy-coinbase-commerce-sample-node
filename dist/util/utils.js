@@ -119,7 +119,7 @@ function getOrderUrl(orderId) {
 }
 exports.getOrderUrl = getOrderUrl;
 function checkRSN(input) {
-    const rsnRegex = new RegExp(`^[a-zA-Z0-9_-]$`);
+    const rsnRegex = new RegExp(`[a-zA-Z0-9_-]$`);
     return rsnRegex.test(input);
 }
 exports.checkRSN = checkRSN;
