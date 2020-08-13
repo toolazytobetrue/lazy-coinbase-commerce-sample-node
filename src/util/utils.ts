@@ -114,8 +114,8 @@ export function isDbObjectId(input: string) {
     return ObjectId.isValidObjectId(input);
 }
 
-export function getOrderUrl(depositId: string) {
-    return `${URL_ON_SUCCESS}?orderId=${depositId}`;
+export function getOrderUrl(orderId: string) {
+    return `${URL_ON_SUCCESS}/orders/${orderId}`;
 }
 
 export function checkRSN(input: string) {

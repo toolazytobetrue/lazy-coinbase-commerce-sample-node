@@ -114,8 +114,8 @@ function isDbObjectId(input) {
     return mongoose_1.default.isValidObjectId(input);
 }
 exports.isDbObjectId = isDbObjectId;
-function getOrderUrl(depositId) {
-    return `${secrets_1.URL_ON_SUCCESS}?orderId=${depositId}`;
+function getOrderUrl(orderId) {
+    return `${secrets_1.URL_ON_SUCCESS}/orders/${orderId}`;
 }
 exports.getOrderUrl = getOrderUrl;
 function checkRSN(input) {
