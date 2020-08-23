@@ -21,6 +21,23 @@ exports.mapToOrderDocument = (order) => {
         amount = +mathjs_1.round(order.account ? +mathjs_1.round(order.account.price, 2) : 0);
         amountWithDiscount = +mathjs_1.round(amount * ratio, 2);
     }
+    else {
+        if (order.services !== undefined && order.services !== null) {
+            if (order.services.length > 0) {
+                order.services.forEach(s => {
+                    amount = +mathjs_1.round(s.service.price, 2);
+                });
+            }
+        }
+        if (order.powerleveling !== undefined && order.powerleveling !== null) {
+            if (order.powerleveling.length > 0) {
+                order.powerleveling.forEach(s => {
+                    amount = +mathjs_1.round(s.price, 2);
+                });
+            }
+        }
+        amountWithDiscount = +mathjs_1.round(amount * ratio, 2);
+    }
     let status = order.status;
     if (order.payment !== null && order.payment.coinbase !== null && order.payment.coinbase !== undefined && order.payment.coinbase.timeline !== null && order.payment.coinbase.timeline !== undefined) {
         if (order.payment.coinbase.timeline.length > 0) {

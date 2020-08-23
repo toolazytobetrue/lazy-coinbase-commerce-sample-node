@@ -19,6 +19,22 @@ export const mapToOrderDocument = (order: OrderDocument) => {
     } else if (order.account) {
         amount = +round(order.account ? +round(order.account.price, 2) : 0);
         amountWithDiscount = +round(amount * ratio, 2);
+    } else {
+        if (order.services !== undefined && order.services !== null) {
+            if (order.services.length > 0) {
+                order.services.forEach(s => {
+                    amount = +round(s.service.price, 2);
+                });
+            }
+        }
+        if (order.powerleveling !== undefined && order.powerleveling !== null) {
+            if (order.powerleveling.length > 0) {
+                order.powerleveling.forEach(s => {
+                    amount = +round(s.price, 2);
+                });
+            }
+        }
+        amountWithDiscount = +round(amount * ratio, 2);
     }
 
     let status = order.status;
