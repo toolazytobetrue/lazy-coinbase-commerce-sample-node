@@ -23,14 +23,14 @@ export const mapToOrderDocument = (order: OrderDocument) => {
         if (order.services !== undefined && order.services !== null) {
             if (order.services.length > 0) {
                 order.services.forEach(s => {
-                    amount = +round(s.service.price, 2);
+                    amount += +round(s.service.price, 2);
                 });
             }
         }
         if (order.powerleveling !== undefined && order.powerleveling !== null) {
             if (order.powerleveling.length > 0) {
                 order.powerleveling.forEach(s => {
-                    amount = +round(s.price, 2);
+                    amount += +round(s.price, 2);
                 });
             }
         }

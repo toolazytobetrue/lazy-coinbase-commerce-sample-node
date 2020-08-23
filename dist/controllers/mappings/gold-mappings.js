@@ -25,14 +25,14 @@ exports.mapToOrderDocument = (order) => {
         if (order.services !== undefined && order.services !== null) {
             if (order.services.length > 0) {
                 order.services.forEach(s => {
-                    amount = +mathjs_1.round(s.service.price, 2);
+                    amount += +mathjs_1.round(s.service.price, 2);
                 });
             }
         }
         if (order.powerleveling !== undefined && order.powerleveling !== null) {
             if (order.powerleveling.length > 0) {
                 order.powerleveling.forEach(s => {
-                    amount = +mathjs_1.round(s.price, 2);
+                    amount += +mathjs_1.round(s.price, 2);
                 });
             }
         }
