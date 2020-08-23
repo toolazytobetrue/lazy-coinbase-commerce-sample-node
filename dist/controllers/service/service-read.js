@@ -15,26 +15,38 @@ const service_model_1 = require("../../models/sales/service.model");
 const service_mappings_1 = require("./service-mappings");
 exports.readServices = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (utils_1.isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
-            return res.status(400).send("Page number is missing");
+        let services = [];
+        if (utils_1.isEmptyOrNull(req.query.pageNumber)) {
+            const numberPerPage = 10;
+            const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
+            services = yield service_model_1.Service.find(objectToFind).sort({ tite: 1 });
+            const _services = services.map(service => service_mappings_1.mapToServiceDocument(service));
+            return res.status(200).send({
+                pageNumber: 1,
+                numberPerPage,
+                totalCount: yield service_model_1.Service.find(objectToFind).countDocuments(),
+                services: _services
+            });
         }
-        // if (isEmptyOrNull(req.query.type) || isNaN(+req.query.type) || !Number.isInteger(+req.query.type)) {
-        //     return res.status(400).send("Type is missing")
-        // }
-        const numberPerPage = 10;
-        const pageNumber = +req.query.pageNumber;
-        const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
-        const services = yield service_model_1.Service.find(objectToFind)
-            .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
-            .limit(numberPerPage)
-            .sort({ dateCreated: -1 });
-        const _services = services.map(service => service_mappings_1.mapToServiceDocument(service));
-        return res.status(200).send({
-            pageNumber,
-            numberPerPage,
-            totalCount: yield service_model_1.Service.find(objectToFind).countDocuments(),
-            services: _services
-        });
+        else {
+            if (isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+                return res.status(400).send("Page number is missing");
+            }
+            const numberPerPage = 10;
+            const pageNumber = +req.query.pageNumber;
+            const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
+            services = yield service_model_1.Service.find(objectToFind)
+                .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
+                .limit(numberPerPage)
+                .sort({ tite: 1 });
+            const _services = services.map(service => service_mappings_1.mapToServiceDocument(service));
+            return res.status(200).send({
+                pageNumber,
+                numberPerPage,
+                totalCount: yield service_model_1.Service.find(objectToFind).countDocuments(),
+                services: _services
+            });
+        }
     }
     catch (err) {
         utils_1.logDetails('error', `Error while fetching services: ${err}`);

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { logDetails, isEmptyOrNull } from "../../util/utils";
 import { Service } from "../../models/sales/service.model";
+import { Order } from "../../models/order/order.model";
 
 export const deleteService = async (req: Request, res: Response, next: NextFunction) => {
     try {
