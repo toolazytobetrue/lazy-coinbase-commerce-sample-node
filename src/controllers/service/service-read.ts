@@ -11,7 +11,7 @@ export const readServices = async (req: Request, res: Response, next: NextFuncti
             const numberPerPage = 10;
 
             const objectToFind = isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
-            services = await Service.find(objectToFind).sort({ tite: 1 });
+            services = await Service.find(objectToFind).sort({ title: 1 });
 
             const _services = services.map(service => mapToServiceDocument(service));
             return res.status(200).send({
@@ -33,7 +33,7 @@ export const readServices = async (req: Request, res: Response, next: NextFuncti
             services = await Service.find(objectToFind)
                 .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
                 .limit(numberPerPage)
-                .sort({ tite: 1 });
+                .sort({ title: 1 });
 
             const _services = services.map(service => mapToServiceDocument(service));
             return res.status(200).send({

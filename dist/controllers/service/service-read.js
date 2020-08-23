@@ -19,7 +19,7 @@ exports.readServices = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         if (utils_1.isEmptyOrNull(req.query.pageNumber) || req.query.pageNumber === 'null' || req.query.pageNumber === 'undefined') {
             const numberPerPage = 10;
             const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
-            services = yield service_model_1.Service.find(objectToFind).sort({ tite: 1 });
+            services = yield service_model_1.Service.find(objectToFind).sort({ title: 1 });
             const _services = services.map(service => service_mappings_1.mapToServiceDocument(service));
             return res.status(200).send({
                 pageNumber: 1,
@@ -38,7 +38,7 @@ exports.readServices = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             services = yield service_model_1.Service.find(objectToFind)
                 .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
                 .limit(numberPerPage)
-                .sort({ tite: 1 });
+                .sort({ title: 1 });
             const _services = services.map(service => service_mappings_1.mapToServiceDocument(service));
             return res.status(200).send({
                 pageNumber,
