@@ -6,7 +6,7 @@ import { mapToServiceDocument } from "./service-mappings";
 export const readServices = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let services: ServiceDocument[] = [];
-        if (isEmptyOrNull(req.query.pageNumber)) {
+        if (isEmptyOrNull(req.query.pageNumber) || req.query.pageNumber === 'null' || req.query.pageNumber === 'undefined') {
 
             const numberPerPage = 10;
 

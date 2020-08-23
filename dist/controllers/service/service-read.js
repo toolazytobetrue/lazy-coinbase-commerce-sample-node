@@ -16,7 +16,7 @@ const service_mappings_1 = require("./service-mappings");
 exports.readServices = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let services = [];
-        if (utils_1.isEmptyOrNull(req.query.pageNumber)) {
+        if (utils_1.isEmptyOrNull(req.query.pageNumber) || req.query.pageNumber === 'null' || req.query.pageNumber === 'undefined') {
             const numberPerPage = 10;
             const objectToFind = utils_1.isEmptyOrNull(req.query.type) || isNaN(req.query.type) ? {} : utils_1.isEmptyOrNull(req.query.title) ? { type: +req.query.type } : { type: +req.query.type, title: { '$regex': req.query.title, $options: 'i' } };
             services = yield service_model_1.Service.find(objectToFind).sort({ tite: 1 });
