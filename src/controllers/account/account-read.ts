@@ -15,7 +15,7 @@ export const readAccounts = async (req: Request, res: Response, next: NextFuncti
         const accounts = await Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
-            .sort({ dateCreated: -1 });
+            .sort({ title: 1 });
 
         const _accounts = accounts.map(user => mapToAccountDocument(user));
         return res.status(200).send({
@@ -51,7 +51,7 @@ export const readAvailableAccounts = async (req: Request, res: Response, next: N
         const accounts = await Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
-            .sort({ dateCreated: -1 });
+            .sort({ title: 1 });
 
         const _accounts = accounts.map(user => mapToAccountDocument(user));
         return res.status(200).send({

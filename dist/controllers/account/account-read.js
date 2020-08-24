@@ -24,7 +24,7 @@ exports.readAccounts = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const accounts = yield account_model_1.Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
-            .sort({ dateCreated: -1 });
+            .sort({ title: 1 });
         const _accounts = accounts.map(user => account_mappings_1.mapToAccountDocument(user));
         return res.status(200).send({
             pageNumber,
@@ -58,7 +58,7 @@ exports.readAvailableAccounts = (req, res, next) => __awaiter(void 0, void 0, vo
         const accounts = yield account_model_1.Account.find(query)
             .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
             .limit(numberPerPage)
-            .sort({ dateCreated: -1 });
+            .sort({ title: 1 });
         const _accounts = accounts.map(user => account_mappings_1.mapToAccountDocument(user));
         return res.status(200).send({
             pageNumber,
