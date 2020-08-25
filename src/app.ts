@@ -117,7 +117,6 @@ app.post('/api/order/services', orderController.createServicesOrder);
 app.post('/api/order/services', isAuthorized, orderController.createServicesOrder);
 
 // app.get('/api/order', isAuthorizedBelowAdmin, orderController.readOrders);
-
 app.get('/api/order/gold', isAuthorizedBelowAdmin, orderController.readGoldOrders);
 app.get('/api/order/account', isAuthorizedBelowAdmin, orderController.readAccountOrders);
 app.get('/api/order/services', isAuthorizedBelowAdmin, orderController.readServicesOrders);

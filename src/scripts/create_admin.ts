@@ -9,7 +9,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true })
         console.log('Successfully connected to mongodb');
         const user = await (new User({
             groupId: 1,
-            email: 'admin@bert.com',
+            email: 'admin@monkeysgold.com',
             password: 'hassan123',
             dateCreated: new Date(),
             lastUpdated: new Date(),

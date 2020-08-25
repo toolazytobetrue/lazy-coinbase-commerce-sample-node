@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bert.com</loc>
+    <loc>https://monkeysgold.com</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/buy/osrs</loc>
+    <loc>https://monkeysgold.com/buy/osrs</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/buy/rs3</loc>
+    <loc>https://monkeysgold.com/buy/rs3</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/infernal-capes</loc>
+    <loc>https://monkeysgold.com/infernal-capes</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/accounts</loc>
+    <loc>https://monkeysgold.com/accounts</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/services</loc>
+    <loc>https://monkeysgold.com/services</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://bert.com/register</loc>
+    <loc>https://monkeysgold.com/register</loc>
     <priority>0.1</priority>
   </url>
   <url>
-    <loc>https://bert.com/login</loc>
+    <loc>https://monkeysgold.com/login</loc>
     <priority>0.1</priority>
   </url>
 </urlset>

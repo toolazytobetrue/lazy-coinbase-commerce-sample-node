@@ -1,13 +1,13 @@
 
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
-export const privateKey = fs.readFileSync('bert.key');
-export const pubKey = fs.readFileSync('bert.key.pub');
+export const privateKey = fs.readFileSync('monkeysgold.key');
+export const pubKey = fs.readFileSync('monkeysgold.key.pub');
 const verifyOptions: jwt.SignOptions = {
     algorithm: 'RS256',
-    audience: 'bert',
+    audience: 'monkeysgold',
     expiresIn: '12h',
-    issuer: 'bertserver',
+    issuer: 'monkeysgoldserver',
     subject: 'credentials',
 };
 

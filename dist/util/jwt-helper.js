@@ -22,13 +22,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.decodeToken = exports.verifyData = exports.signData = exports.pubKey = exports.privateKey = void 0;
 const fs = __importStar(require("fs"));
 const jwt = __importStar(require("jsonwebtoken"));
-exports.privateKey = fs.readFileSync('bert.key');
-exports.pubKey = fs.readFileSync('bert.key.pub');
+exports.privateKey = fs.readFileSync('monkeysgold.key');
+exports.pubKey = fs.readFileSync('monkeysgold.key.pub');
 const verifyOptions = {
     algorithm: 'RS256',
-    audience: 'bert',
+    audience: 'monkeysgold',
     expiresIn: '12h',
-    issuer: 'bertserver',
+    issuer: 'monkeysgoldserver',
     subject: 'credentials',
 };
 function signData(data, cb) {

@@ -23,7 +23,7 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true })
     console.log('Successfully connected to mongodb');
     const user = yield (new user_model_1.User({
         groupId: 1,
-        email: 'admin@bert.com',
+        email: 'admin@monkeysgold.com',
         password: 'hassan123',
         dateCreated: new Date(),
         lastUpdated: new Date(),
