@@ -22,7 +22,10 @@ export const readAccounts = async (req: Request, res: Response, next: NextFuncti
             pageNumber,
             numberPerPage,
             totalCount: await Account.find(query).countDocuments(),
-            accounts: _accounts
+            accounts: _accounts,
+            grouping: await Account.aggregate([
+                { "$group": { _id: "$type", count: { $sum: 1 } } }
+            ])
         });
     } catch (err) {
         logDetails('error', `Error while fetching accounts: ${err}`);
@@ -58,7 +61,10 @@ export const readAvailableAccounts = async (req: Request, res: Response, next: N
             pageNumber,
             numberPerPage,
             totalCount: await Account.find(query).countDocuments(),
-            accounts: _accounts
+            accounts: _accounts,
+            grouping: await Account.aggregate([
+                { "$group": { _id: "$type", count: { $sum: 1 } } }
+            ])
         });
     } catch (err) {
         logDetails('error', `Error while fetching accounts: ${err}`);

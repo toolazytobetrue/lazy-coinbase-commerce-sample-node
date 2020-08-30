@@ -30,7 +30,10 @@ exports.readAccounts = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             pageNumber,
             numberPerPage,
             totalCount: yield account_model_1.Account.find(query).countDocuments(),
-            accounts: _accounts
+            accounts: _accounts,
+            grouping: yield account_model_1.Account.aggregate([
+                { "$group": { _id: "$type", count: { $sum: 1 } } }
+            ])
         });
     }
     catch (err) {
@@ -64,7 +67,10 @@ exports.readAvailableAccounts = (req, res, next) => __awaiter(void 0, void 0, vo
             pageNumber,
             numberPerPage,
             totalCount: yield account_model_1.Account.find(query).countDocuments(),
-            accounts: _accounts
+            accounts: _accounts,
+            grouping: yield account_model_1.Account.aggregate([
+                { "$group": { _id: "$type", count: { $sum: 1 } } }
+            ])
         });
     }
     catch (err) {

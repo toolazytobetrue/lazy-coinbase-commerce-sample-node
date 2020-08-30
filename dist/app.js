@@ -58,7 +58,7 @@ const currency_converter_1 = require("./api/currency-converter");
 const currenciesController = __importStar(require("./controllers/currencies"));
 exports.RATES_MINIFIED = {};
 const redisOptions = {
-    password: secrets_1.REDIS_PASSWORD
+// password: REDIS_PASSWORD
 };
 exports.REDIS_CLIENT = redis_1.default.createClient(redisOptions);
 const app = express_1.default();
