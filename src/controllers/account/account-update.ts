@@ -3,6 +3,7 @@ import { logDetails, isEmptyOrNull } from "../../util/utils";
 import { isArray } from "util";
 import { Account } from "../../models/sales/account.model";
 import { round } from "mathjs";
+import { AccountAddonDocument, AccountAddon } from "../../models/sales/account-addon";
 
 export const updateAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,12 +45,32 @@ export const updateAccount = async (req: Request, res: Response, next: NextFunct
             return res.status(404).send("Account not found");
         }
 
+        const foundAddons: AccountAddonDocument[] = [];
+        if (isArray(req.body.allowedAddons) && req.body.allowedAddons.length > 0) {
+            let notFound = 0;
+            const allowedAddons = await AccountAddon.find({});
+            if (allowedAddons.length > 0) {
+                const ids = allowedAddons.map(aa => `${aa._id}`);
+                req.body.allowedAddons.forEach((requestedAddon: string) => {
+                    if (ids.indexOf(`${requestedAddon}`) === -1) {
+                        notFound++;
+                    } else {
+                        foundAddons.push(allowedAddons[ids.indexOf(`${requestedAddon}`)])
+                    }
+                })
+            }
+            if (notFound > 0) {
+                return res.status(400).send('Some addons were not found');
+            }
+        }
+
         account.type = +req.body.type;
         account.title = req.body.title;
         account.images = req.body.images;
         account.price = +round(req.body.price, 2);
         account.description = req.body.description ? req.body.description : '';
         account.stock = req.body.stock;
+        account.allowedAddons = foundAddons;
         await account.save();
         return res.status(200).json({ result: `Successfully updated account ${account._id} in the DB` })
     } catch (err) {

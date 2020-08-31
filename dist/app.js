@@ -57,6 +57,7 @@ const redis_users_1 = require("./api/redis-users");
 const currency_converter_1 = require("./api/currency-converter");
 const currenciesController = __importStar(require("./controllers/currencies"));
 exports.RATES_MINIFIED = {};
+const accountAddonController = __importStar(require("./controllers/account-addon/account-addon"));
 const redisOptions = {
 // password: REDIS_PASSWORD
 };
@@ -178,5 +179,12 @@ app.get('/api/currencies', currenciesController.readCurrencies);
  */
 app.post('/api/webhooks/coinbase', webhookCoinbase.webhookCoinbase);
 app.post('/api/webhooks/g2a', webhookG2A.webhookG2A);
+/**
+ * Account Addon API endpoins
+ */
+app.post('/api/accountaddon', security_1.isAuthorizedRootAdmin, accountAddonController.createAccountAddon);
+app.get('/api/accountaddon', accountAddonController.readAccountAddons);
+app.put('/api/accountaddon/:accountAddonId', security_1.isAuthorizedRootAdmin, accountAddonController.updateAccountAddon);
+app.delete('/api/accountaddon/:accountAddonId', security_1.isAuthorizedRootAdmin, accountAddonController.deleteAccountAddon);
 exports.default = app;
 //# sourceMappingURL=app.js.map

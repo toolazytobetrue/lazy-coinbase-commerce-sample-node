@@ -23,6 +23,7 @@ import { setUserArray } from './api/redis-users';
 import { getCurrencies } from './api/currency-converter';
 import * as currenciesController from './controllers/currencies';
 export let RATES_MINIFIED: any = {}
+import * as accountAddonController from './controllers/account-addon/account-addon';
 
 const redisOptions = {
     // password: REDIS_PASSWORD
@@ -182,5 +183,15 @@ app.get('/api/currencies', currenciesController.readCurrencies);
 
 app.post('/api/webhooks/coinbase', webhookCoinbase.webhookCoinbase);
 app.post('/api/webhooks/g2a', webhookG2A.webhookG2A);
+
+/**
+ * Account Addon API endpoins
+ */
+
+app.post('/api/accountaddon', isAuthorizedRootAdmin, accountAddonController.createAccountAddon);
+app.get('/api/accountaddon', accountAddonController.readAccountAddons);
+app.put('/api/accountaddon/:accountAddonId', isAuthorizedRootAdmin, accountAddonController.updateAccountAddon);
+app.delete('/api/accountaddon/:accountAddonId', isAuthorizedRootAdmin, accountAddonController.deleteAccountAddon);
+
 
 export default app;
