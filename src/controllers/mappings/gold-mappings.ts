@@ -70,7 +70,6 @@ export const mapToOrderGoldDocument = (goldDoc: GoldDocument) => {
         units: goldDoc.units,
         server: goldDoc.server,
         stock: mapToStock(goldDoc.stock),
-        rsn: goldDoc.rsn,
-        combat: goldDoc.combat
+        rsn: goldDoc.rsn
     }
 }

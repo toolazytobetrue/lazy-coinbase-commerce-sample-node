@@ -17,7 +17,7 @@ const utils_1 = require("../../util/utils");
 const user_model_1 = require("../../models/user/user.model");
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
 const app_1 = require("../../app");
-function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGateway, rsn, combat, coupon, ipAddress, userId) {
+function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGateway, rsn, coupon, ipAddress, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -33,7 +33,7 @@ function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGat
                 throw new Error("RSN is required");
             }
             const _price = (goldType === 'oldschool' ? stock.osrs.selling : stock.rs3.selling);
-            const price = _price * app_1.RATES_MINIFIED[currency];
+            const price = +mathjs_1.round(_price * app_1.RATES_MINIFIED[currency], 2);
             const total = +mathjs_1.round(units * price, 2);
             const percentage = 100 - (coupon ? coupon.amount : 0);
             const ratio = percentage / 100;
@@ -53,13 +53,12 @@ function transactionCreateGoldOrder(currency, goldType, units, stock, paymentGat
                     units,
                     server: goldType === 'oldschool' ? 1 : 2,
                     stock,
-                    rsn,
-                    combat
+                    rsn
                 }
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn} - Combat level: ${combat}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscounted, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - ${units}M GP ${goldType} - RSN: ${rsn}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,
