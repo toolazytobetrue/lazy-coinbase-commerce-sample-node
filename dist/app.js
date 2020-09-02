@@ -91,6 +91,7 @@ exports.safeGetCurrencies = () => __awaiter(void 0, void 0, void 0, function* ()
         const body = JSON.parse(response);
         exports.RATES_MINIFIED = {
             USD: 1,
+            GBP: body['quotes']['USDGBP'],
             EUR: body['quotes']['USDEUR'],
             CAD: body['quotes']['USDCAD'],
             CNY: body['quotes']['USDCNY'],

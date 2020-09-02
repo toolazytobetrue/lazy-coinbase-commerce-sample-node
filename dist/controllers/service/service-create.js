@@ -28,9 +28,9 @@ exports.createService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative");
         }
-        if (utils_1.isEmptyOrNull(req.body.description)) {
-            return res.status(400).send("Service description is missing");
-        }
+        // if (isEmptyOrNull(req.body.description)) {
+        //     return res.status(400).send("Service description is missing")
+        // }
         if (utils_1.isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Service price is missing");
         }
@@ -39,7 +39,7 @@ exports.createService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         const service = yield (new service_model_1.Service({
             title: req.body.title,
-            description: req.body.description,
+            description: utils_1.isEmptyOrNull(req.body.description) ? '' : req.body.description,
             img: req.body.img,
             price: +mathjs_1.round(+req.body.price, 2),
             dateCreated: new Date(),

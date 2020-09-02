@@ -64,6 +64,7 @@ export const safeGetCurrencies = async () => {
         const body = JSON.parse(response);
         RATES_MINIFIED = {
             USD: 1,
+            GBP: body['quotes']['USDGBP'],
             EUR: body['quotes']['USDEUR'],
             CAD: body['quotes']['USDCAD'],
             CNY: body['quotes']['USDCNY'],

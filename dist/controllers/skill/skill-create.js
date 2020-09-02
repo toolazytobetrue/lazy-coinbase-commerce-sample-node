@@ -23,7 +23,6 @@ exports.createSkill = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         yield (skill_model_1.Skill.create([
             {
                 title: req.body.title,
-                img: req.body.img,
                 range: req.body.range,
                 dateCreated: new Date()
             }

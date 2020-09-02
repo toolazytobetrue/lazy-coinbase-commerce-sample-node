@@ -30,9 +30,9 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative");
         }
-        if (utils_1.isEmptyOrNull(req.body.description)) {
-            return res.status(400).send("Service description is missing");
-        }
+        // if (isEmptyOrNull(req.body.description)) {
+        //     return res.status(400).send("Service description is missing")
+        // }
         if (utils_1.isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Service price is missing");
         }
@@ -43,7 +43,7 @@ exports.updateService = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         service.title = req.body.title;
         service.type = req.body.type;
         service.price = +mathjs_1.round(req.body.price, 2);
-        service.description = req.body.description;
+        service.description = utils_1.isEmptyOrNull(req.body.description) ? '' : req.body.description;
         service.img = utils_1.isEmptyOrNull(req.body.img) ? null : req.body.img;
         yield service.save();
         return res.status(200).json({ result: `Successfully updated service ${service._id} in the DB` });

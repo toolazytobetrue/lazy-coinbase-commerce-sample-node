@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 export type ServiceDocument = mongoose.Document & {
     title: string;
     type: number;
-    description: string;
+    description?: string;
     img?: string;
     price: number;
     dateCreated: Date;
@@ -13,7 +13,7 @@ export type ServiceDocument = mongoose.Document & {
 const ServiceSchema = new mongoose.Schema({
     title: { type: String, required: true },
     type: { type: Number, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     img: { type: String, required: false },
     price: { type: Number, required: true },
     dateCreated: { type: Date, required: true },

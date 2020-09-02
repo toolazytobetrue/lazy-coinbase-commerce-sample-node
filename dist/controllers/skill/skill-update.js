@@ -20,9 +20,6 @@ exports.updateSkill = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (utils_1.isEmptyOrNull(req.body.title)) {
             return res.status(400).send("Skill title is missing");
         }
-        if (utils_1.isEmptyOrNull(req.body.img)) {
-            return res.status(400).send("Skill img is missing");
-        }
         if (utils_1.isEmptyOrNull(req.body.range) || !Array.isArray(req.body.range)) {
             return res.status(400).send("Skill range is missing");
         }

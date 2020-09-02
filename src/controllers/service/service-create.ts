@@ -19,9 +19,9 @@ export const createService = async (req: Request, res: Response, next: NextFunct
         if (+req.body.price <= 0) {
             return res.status(400).send("Service price cannot be zero or negative")
         }
-        if (isEmptyOrNull(req.body.description)) {
-            return res.status(400).send("Service description is missing")
-        }
+        // if (isEmptyOrNull(req.body.description)) {
+        //     return res.status(400).send("Service description is missing")
+        // }
         if (isEmptyOrNull(req.body.price)) {
             return res.status(400).send("Service price is missing");
         }
@@ -30,7 +30,7 @@ export const createService = async (req: Request, res: Response, next: NextFunct
         }
         const service = await (new Service({
             title: req.body.title,
-            description: req.body.description,
+            description: isEmptyOrNull(req.body.description) ? '' : req.body.description,
             img: req.body.img,
             price: +round(+req.body.price, 2),
             dateCreated: new Date(),
