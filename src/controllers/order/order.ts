@@ -1,27 +1,12 @@
-import { createGoldOrder } from "./gold/gold-create-order";
-import { createAccountOrder } from "./account/account-create-order";
-import { createServicesOrder } from "./services/services-create-order";
-import { readOrder } from "./order-read";
-import { requestOrder } from "./order-request";
-import { readGoldOrders } from "./gold/gold-read-orders";
-import { readAccountOrders } from "./account/account-read-orders";
-import { updateAccountOrder } from "./account/account-update-order";
-import { updateGoldOrder } from "./gold/gold-update-order";
-import { readServicesOrders } from "./services/services-read-orders";
-import { updateServicesOrder } from "./services/services-update-order";
+import { readOrder, readOrders } from "./order-read";
 import { deleteOrder } from "./order-delete";
+import { createOrder } from "./order-create";
+import { updateOrder } from "./order-update";
 
 export {
-    createGoldOrder,
-    createAccountOrder,
-    createServicesOrder,
+    createOrder,
     readOrder,
-    deleteOrder,
-    updateAccountOrder,
-    updateGoldOrder,
-    requestOrder,
-    readGoldOrders,
-    readAccountOrders,
-    readServicesOrders,
-    updateServicesOrder
+    readOrders,
+    updateOrder,
+    deleteOrder
 }

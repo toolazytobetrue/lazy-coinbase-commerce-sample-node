@@ -27,21 +27,9 @@ exports.createCoupon = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         if (+req.body.amount <= 0) {
             return res.status(400).send("Coupon amount cannot be zero or negative");
         }
-        if (utils_1.isEmptyOrNull(req.body.gold) || typeof req.body.gold !== 'boolean') {
-            return res.status(400).send("Coupon gold flag is missing");
-        }
-        if (utils_1.isEmptyOrNull(req.body.services) || typeof req.body.services !== 'boolean') {
-            return res.status(400).send("Coupon services flag is missing");
-        }
-        if (utils_1.isEmptyOrNull(req.body.accounts) || typeof req.body.accounts !== 'boolean') {
-            return res.status(400).send("Coupon accounts flag is missing");
-        }
         const coupon = yield (new coupon_model_1.Coupon({
             code: req.body.code,
             amount: +mathjs_1.round(+req.body.amount, 2),
-            gold: req.body.gold,
-            services: req.body.services,
-            accounts: req.body.accounts,
             dateCreated: new Date(),
             enabled: true
         })).save();

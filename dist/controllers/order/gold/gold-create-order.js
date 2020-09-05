@@ -16,7 +16,6 @@ const stock_model_1 = require("../../../models/sales/stock.model");
 const mathjs_1 = require("mathjs");
 const secrets_1 = require("../../../util/secrets");
 const coupon_model_1 = require("../../../models/sales/coupon.model");
-const create_gold_order_1 = require("../../../api/order/create_gold_order");
 exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
@@ -107,8 +106,6 @@ exports.createGoldOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 rsn += _rsn[i];
             }
         }
-        const order = yield create_gold_order_1.transactionCreateGoldOrder(req.body.currency, req.body.type, +mathjs_1.round(req.body.units, 2), latestStock, paymentGateway, rsn, coupon, userIpAddress, userId);
-        return res.status(200).json({ redirect_url: order.redirect_url });
     }
     catch (err) {
         utils_1.logDetails('error', `Error creating an order ${err}`);

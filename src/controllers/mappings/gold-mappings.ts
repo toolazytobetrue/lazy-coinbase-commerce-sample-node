@@ -14,28 +14,32 @@ export const mapToOrderDocument = (order: OrderDocument) => {
 
     if (order.gold) {
         const unitPrice = +round(order.gold.server === 1 ? order.gold.stock.osrs.selling : order.gold.stock.rs3.selling, 2);
-        amount = +round(order.gold ? order.gold.units * unitPrice : 0);
-        amountWithDiscount = +round(amount * ratio, 2);
-    } else if (order.account) {
-        amount = +round(order.account ? +round(order.account.price, 2) : 0);
-        amountWithDiscount = +round(amount * ratio, 2);
-    } else {
-        if (order.services !== undefined && order.services !== null) {
-            if (order.services.length > 0) {
-                order.services.forEach(s => {
-                    amount += +round(s.service.price, 2);
-                });
-            }
-        }
-        if (order.powerleveling !== undefined && order.powerleveling !== null) {
-            if (order.powerleveling.length > 0) {
-                order.powerleveling.forEach(s => {
-                    amount += +round(s.price, 2);
-                });
-            }
-        }
-        amountWithDiscount = +round(amount * ratio, 2);
+        amount += order.gold ? (order.gold.units * unitPrice) : 0;
     }
+
+    if (order.accounts !== undefined && order.accounts !== null) {
+        order.accounts.forEach(account => {
+            amount += account.price;
+            account.allowedAddons.forEach(allowedAddon => {
+                amount += allowedAddon.price;
+            })
+        })
+    }
+    if (order.services !== undefined && order.services !== null) {
+        if (order.services.length > 0) {
+            order.services.forEach(s => {
+                amount += s.service.price;
+            });
+        }
+    }
+    if (order.powerleveling !== undefined && order.powerleveling !== null) {
+        if (order.powerleveling.length > 0) {
+            order.powerleveling.forEach(s => {
+                amount += s.price
+            });
+        }
+    }
+    amountWithDiscount = +round(amount * ratio, 2);
 
     let status = order.status;
     if (order.payment !== null && order.payment.coinbase !== null && order.payment.coinbase !== undefined && order.payment.coinbase.timeline !== null && order.payment.coinbase.timeline !== undefined) {
@@ -58,7 +62,7 @@ export const mapToOrderDocument = (order: OrderDocument) => {
         coupon: order.coupon ? maptoCouponDocument(order.coupon) : null,
         ipAddress: order.ipAddress ? order.ipAddress : 'N/A',
         gold: order.gold ? mapToOrderGoldDocument(order.gold) : null,
-        account: order.account ? mapToAccountDocument(order.account) : null,
+        accounts: order.accounts ? order.accounts.map(account => mapToAccountDocument(account)) : [],
         services: order.services,
         powerleveling: order.powerleveling
     }

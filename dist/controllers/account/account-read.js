@@ -48,13 +48,20 @@ exports.readAvailableAccounts = (req, res, next) => __awaiter(void 0, void 0, vo
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
-        let query = {};
+        let query = {
+            stock: {
+                $gte: 1
+            }
+        };
         if (req.query.types !== 'null' && !utils_1.isEmptyOrNull(req.query.types)) {
             const _accountTypes = req.query.types.includes(',') ? req.query.types.split(',') : [...req.query.types];
             let accountTypes = _accountTypes.map((x) => +x);
             query = {
                 type: {
                     $in: accountTypes
+                },
+                stock: {
+                    $gte: 1
                 }
             };
         }
@@ -69,6 +76,13 @@ exports.readAvailableAccounts = (req, res, next) => __awaiter(void 0, void 0, vo
             totalCount: yield account_model_1.Account.find(query).countDocuments(),
             accounts: _accounts,
             grouping: yield account_model_1.Account.aggregate([
+                {
+                    $match: {
+                        stock: {
+                            $gte: 1
+                        }
+                    }
+                },
                 { "$group": { _id: "$type", count: { $sum: 1 } } }
             ])
         });

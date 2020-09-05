@@ -20,15 +20,6 @@ export const updateCoupon = async (req: Request, res: Response, next: NextFuncti
         if (+req.body.amount <= 0) {
             return res.status(400).send("Coupon amount cannot be zero or negative")
         }
-        if (isEmptyOrNull(req.body.gold) || typeof req.body.gold !== 'boolean') {
-            return res.status(400).send("Coupon gold flag is missing")
-        }
-        if (isEmptyOrNull(req.body.services) || typeof req.body.services !== 'boolean') {
-            return res.status(400).send("Coupon services flag is missing")
-        }
-        if (isEmptyOrNull(req.body.accounts) || typeof req.body.accounts !== 'boolean') {
-            return res.status(400).send("Coupon accounts flag is missing")
-        }
         if (isEmptyOrNull(req.body.enabled) || typeof req.body.enabled !== 'boolean') {
             return res.status(400).send("Coupon enabled flag is missing")
         }
@@ -38,9 +29,6 @@ export const updateCoupon = async (req: Request, res: Response, next: NextFuncti
         }
         coupon.code = req.body.code;
         coupon.amount = +round(req.body.amount, 2);
-        coupon.gold = req.body.gold;
-        coupon.services = req.body.services;
-        coupon.accounts = req.body.accounts;
         coupon.enabled = req.body.enabled;
         await coupon.save();
         return res.status(200).json({ result: `Successfully updated coupon ${coupon._id} in the DB` })

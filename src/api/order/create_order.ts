@@ -13,7 +13,8 @@ import { OrderStatus } from '../../models/enums/OrderStatus.enum';
 import { MIN_SERVICES_ORDER } from '../../util/secrets';
 import { CouponDocument } from '../../models/sales/coupon.model';
 import { RATES_MINIFIED } from '../../app';
-export async function transactionCreateServicesOrder(currency: string, paymentGateway: PaymentGatewayDocument, services: ServiceDocument[] = [], powerleveling: { skill: SkillDocument, fromLevel: number, toLevel: number, price: number, dateCreated: Date, totalXp: number }[] = [], userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
+import { AccountDocument } from '../../models/sales/account.model';
+export async function transactionCreateOrder(currency: string, paymentGateway: PaymentGatewayDocument, services: ServiceDocument[] = [], powerleveling: { skill: SkillDocument, fromLevel: number, toLevel: number, price: number, dateCreated: Date, totalXp: number }[] = [], accounts: AccountDocument[], userId: string, coupon: null | undefined | CouponDocument, ipAddress: string) {
     try {
         if (!userId && paymentGateway.requiresLogin) {
             throw new Error("Payment gateway requires authentication")
@@ -24,29 +25,32 @@ export async function transactionCreateServicesOrder(currency: string, paymentGa
             throw new Error("User not found while creating services order");
         }
 
-        let powerlevelingDocs: PowerlevelingDocument[] = [];
-        let serviceMinigamesDocs: ServiceMinigameDocument[] = [];
-        if (powerleveling.length > 0) {
-            powerlevelingDocs = await Powerleveling.create(powerleveling)
-        }
+        // let powerlevelingDocs: PowerlevelingDocument[] = [];
+        let serviceMinigames: any[] = [];
+        // if (powerleveling.length > 0) {
+        //     powerlevelingDocs = await Powerleveling.create(powerleveling)
+        // }
         if (services.length > 0) {
-            const serviceMinigames = services.map(s => {
+            serviceMinigames = services.map(s => {
                 return {
                     dateCreated: new Date(),
                     service: s
                 }
             });
-            serviceMinigamesDocs = await ServiceMinigame.create(serviceMinigames)
+            // serviceMinigamesDocs = await ServiceMinigame.create(serviceMinigames)
         }
 
         let sum = 0;
-        powerlevelingDocs.forEach(powerLvling => {
+        powerleveling.forEach(powerLvling => {
             sum += powerLvling.price;
         });
 
-        serviceMinigamesDocs.forEach(powerLvling => {
+        serviceMinigames.forEach(powerLvling => {
             sum += powerLvling.service.price;
         });
+
+        const accountsTotal = getTotalAccountsPrice(accounts);
+        sum += accountsTotal;
 
         if (MIN_SERVICES_ORDER && +round(sum, 2) < +MIN_SERVICES_ORDER) {
             throw new Error(`Minimum services order is ${MIN_SERVICES_ORDER} USD`);
@@ -80,13 +84,14 @@ export async function transactionCreateServicesOrder(currency: string, paymentGa
             coupon,
             user: userId,
             ipAddress,
-            powerleveling: powerlevelingDocs,
-            services: serviceMinigamesDocs
+            powerleveling,
+            services: serviceMinigames,
+            accounts: accounts
         };
 
         switch (paymentGateway.name) {
             case 'crypto':
-                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
+                const coinbaseCharge = await createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Accounts x ${accounts.length} / Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
                 _order.payment = {
                     coinbase: {
                         code: coinbaseCharge.code,
@@ -104,4 +109,17 @@ export async function transactionCreateServicesOrder(currency: string, paymentGa
     } catch (err) {
         throw new Error(err)
     }
+}
+
+
+export const getTotalAccountsPrice = (accounts: AccountDocument[]) => {
+    let total = 0;
+    accounts.forEach(account => {
+        total += account.price;
+
+        account.allowedAddons.forEach(addon => {
+            total += addon.price;
+        })
+    })
+    return total;
 }

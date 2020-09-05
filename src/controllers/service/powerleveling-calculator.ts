@@ -49,8 +49,8 @@ export const getTotalPrice = (skill: SkillDocument, fromLevel: number, toLevel: 
     });
 
     const osrs = round(totalPrice / 1e6, 2);
-    const usd = +round(stock.osrs.buying * +osrs, 2);
-    const rs3 = +round(stock.rs3.buying * +osrs, 2)
+    const usd = +round(stock.osrs.selling * +osrs, 2);
+    const rs3 = +round(stock.rs3.selling * +osrs, 2)
     return {
         usd,
         osrs,

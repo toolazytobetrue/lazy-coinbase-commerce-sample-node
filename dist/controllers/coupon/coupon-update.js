@@ -30,15 +30,6 @@ exports.updateCoupon = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         if (+req.body.amount <= 0) {
             return res.status(400).send("Coupon amount cannot be zero or negative");
         }
-        if (utils_1.isEmptyOrNull(req.body.gold) || typeof req.body.gold !== 'boolean') {
-            return res.status(400).send("Coupon gold flag is missing");
-        }
-        if (utils_1.isEmptyOrNull(req.body.services) || typeof req.body.services !== 'boolean') {
-            return res.status(400).send("Coupon services flag is missing");
-        }
-        if (utils_1.isEmptyOrNull(req.body.accounts) || typeof req.body.accounts !== 'boolean') {
-            return res.status(400).send("Coupon accounts flag is missing");
-        }
         if (utils_1.isEmptyOrNull(req.body.enabled) || typeof req.body.enabled !== 'boolean') {
             return res.status(400).send("Coupon enabled flag is missing");
         }
@@ -48,9 +39,6 @@ exports.updateCoupon = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         }
         coupon.code = req.body.code;
         coupon.amount = +mathjs_1.round(req.body.amount, 2);
-        coupon.gold = req.body.gold;
-        coupon.services = req.body.services;
-        coupon.accounts = req.body.accounts;
         coupon.enabled = req.body.enabled;
         yield coupon.save();
         return res.status(200).json({ result: `Successfully updated coupon ${coupon._id} in the DB` });

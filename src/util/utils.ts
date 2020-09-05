@@ -121,4 +121,13 @@ export function getOrderUrl(orderId: string) {
 export function checkRSN(input: string) {
     const rsnRegex = new RegExp(`[a-zA-Z0-9_-]$`)
     return rsnRegex.test(input)
-} 
+}
+
+export const currencies = [
+    'USD',
+    'GBP',
+    'EUR',
+    'CAD',
+    'CNY',
+    'NZD'
+]

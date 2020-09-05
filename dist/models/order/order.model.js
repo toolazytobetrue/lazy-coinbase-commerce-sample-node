@@ -49,7 +49,7 @@ exports.OrderSchema = new mongoose_1.default.Schema({
     coupon: { type: coupon_model_1.Coupon.schema, required: false },
     ipAddress: { type: String, required: false },
     gold: { type: exports.Gold.schema, required: false },
-    account: { type: account_model_1.Account.schema, required: false },
+    accounts: { type: [account_model_1.Account.schema], required: false },
     services: { type: [serviceminigame_model_1.ServiceMinigame.schema], required: false },
     powerleveling: { type: [powerleveling_model_1.Powerleveling.schema], required: false }
 });

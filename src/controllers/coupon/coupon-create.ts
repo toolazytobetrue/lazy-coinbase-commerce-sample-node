@@ -17,21 +17,9 @@ export const createCoupon = async (req: Request, res: Response, next: NextFuncti
         if (+req.body.amount <= 0) {
             return res.status(400).send("Coupon amount cannot be zero or negative")
         }
-        if (isEmptyOrNull(req.body.gold) || typeof req.body.gold !== 'boolean') {
-            return res.status(400).send("Coupon gold flag is missing")
-        }
-        if (isEmptyOrNull(req.body.services) || typeof req.body.services !== 'boolean') {
-            return res.status(400).send("Coupon services flag is missing")
-        }
-        if (isEmptyOrNull(req.body.accounts) || typeof req.body.accounts !== 'boolean') {
-            return res.status(400).send("Coupon accounts flag is missing")
-        }
         const coupon = await (new Coupon({
             code: req.body.code,
             amount: +round(+req.body.amount, 2),
-            gold: req.body.gold,
-            services: req.body.services,
-            accounts: req.body.accounts,
             dateCreated: new Date(),
             enabled: true
         })).save()

@@ -40,13 +40,20 @@ export const readAvailableAccounts = async (req: Request, res: Response, next: N
         }
         const numberPerPage = 10;
         const pageNumber = +req.query.pageNumber;
-        let query = {}
+        let query: any = {
+            stock: {
+                $gte: 1
+            }
+        }
         if (req.query.types !== 'null' && !isEmptyOrNull(req.query.types)) {
             const _accountTypes = req.query.types.includes(',') ? req.query.types.split(',') : [...req.query.types]
             let accountTypes = _accountTypes.map((x: string) => +x);
             query = {
                 type: {
                     $in: accountTypes
+                },
+                stock: {
+                    $gte: 1
                 }
             }
         }
@@ -63,6 +70,13 @@ export const readAvailableAccounts = async (req: Request, res: Response, next: N
             totalCount: await Account.find(query).countDocuments(),
             accounts: _accounts,
             grouping: await Account.aggregate([
+                {
+                    $match: {
+                        stock: {
+                            $gte: 1
+                        }
+                    }
+                },
                 { "$group": { _id: "$type", count: { $sum: 1 } } }
             ])
         });

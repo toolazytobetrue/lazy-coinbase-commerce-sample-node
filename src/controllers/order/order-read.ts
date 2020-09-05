@@ -27,3 +27,29 @@ export const readOrder = async (req: Request, res: Response, next: NextFunction)
         return res.status(500).send('Failed to read orders');
     }
 }
+
+export const readOrders = async (req: Request, res: Response, next: NextFunction) => {
+    if (isEmptyOrNull(req.query.pageNumber) || isNaN(+req.query.pageNumber) || !Number.isInteger(+req.query.pageNumber)) {
+        return res.status(400).send("Page number is missing")
+    }
+    let _orders: any[] = [];
+    let filter: any = {};
+    const numberPerPage = 10;
+    const pageNumber = +req.query.pageNumber;
+
+    filter = { /**account: { $ne: undefined } */ };
+    _orders = await Order.find()
+        .sort({ dateCreated: -1 })
+        .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
+        .limit(numberPerPage)
+        .populate('user')
+
+    const orders = _orders.map(order => mapToOrderDocument(order));
+
+    return res.status(200).json({
+        pageNumber,
+        numberPerPage,
+        totalCount: await Order.find(filter).countDocuments(),
+        orders: orders
+    });
+}

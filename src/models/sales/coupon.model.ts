@@ -3,9 +3,6 @@ import mongoose, { Schema } from 'mongoose';
 export type CouponDocument = mongoose.Document & {
     code: string;
     amount: number;
-    gold: boolean;
-    services: boolean;
-    accounts: boolean;
     enabled: boolean;
     dateCreated: Date;
     lastUpdated: Date;
@@ -14,9 +11,6 @@ export type CouponDocument = mongoose.Document & {
 const CouponSchema = new mongoose.Schema({
     code: { type: String, required: true },
     amount: { type: Number, required: true },
-    gold: { type: Boolean, required: true },
-    services: { type: Boolean, required: true },
-    accounts: { type: Boolean, required: true },
     enabled: { type: Boolean, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,

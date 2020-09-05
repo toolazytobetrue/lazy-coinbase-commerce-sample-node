@@ -37,7 +37,7 @@ export type OrderDocument = mongoose.Document & {
     coupon?: CouponDocument,
     ipAddress?: string,
     gold?: GoldDocument,
-    account?: AccountDocument,
+    accounts?: AccountDocument[],
     services?: ServiceMinigameDocument[];
     powerleveling?: PowerlevelingDocument[];
 };
@@ -56,7 +56,7 @@ export const OrderSchema = new mongoose.Schema({
     coupon: { type: Coupon.schema, required: false },
     ipAddress: { type: String, required: false },
     gold: { type: Gold.schema, required: false },
-    account: { type: Account.schema, required: false },
+    accounts: { type: [Account.schema], required: false },
     services: { type: [ServiceMinigame.schema], required: false },
     powerleveling: { type: [Powerleveling.schema], required: false }
 });

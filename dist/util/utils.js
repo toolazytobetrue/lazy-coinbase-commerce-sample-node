@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkRSN = exports.getOrderUrl = exports.isDbObjectId = exports.getOptionalAuthorizedUser = exports.deepClone = exports.generateUuid = exports.isAuthorizedJwt = exports.isAllowedOrderRange = exports.getAuthorizedUser = exports.logDetails = exports.generateText = exports.getAuthorization = exports.isEmptyOrNullParams = exports.isEmptyOrNull = void 0;
+exports.currencies = exports.checkRSN = exports.getOrderUrl = exports.isDbObjectId = exports.getOptionalAuthorizedUser = exports.deepClone = exports.generateUuid = exports.isAuthorizedJwt = exports.isAllowedOrderRange = exports.getAuthorizedUser = exports.logDetails = exports.generateText = exports.getAuthorization = exports.isEmptyOrNullParams = exports.isEmptyOrNull = void 0;
 const jwt_helper_1 = require("./jwt-helper");
 const logger_1 = __importDefault(require("./logger"));
 const moment_1 = __importDefault(require("moment"));
@@ -123,4 +123,12 @@ function checkRSN(input) {
     return rsnRegex.test(input);
 }
 exports.checkRSN = checkRSN;
+exports.currencies = [
+    'USD',
+    'GBP',
+    'EUR',
+    'CAD',
+    'CNY',
+    'NZD'
+];
 //# sourceMappingURL=utils.js.map

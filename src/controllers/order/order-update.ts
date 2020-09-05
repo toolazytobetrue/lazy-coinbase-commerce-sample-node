@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { logDetails, isEmptyOrNull, isDbObjectId } from '../../../util/utils';
-import { Order } from '../../../models/order/order.model';
-export const updateGoldOrder = async (req: Request, res: Response, next: NextFunction) => {
+import { logDetails, isEmptyOrNull, isDbObjectId } from '../../util/utils';
+import { Order } from '../../models/order/order.model';
+export const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (isEmptyOrNull(req.params.orderId) || !isDbObjectId(req.params.orderId)) {
             return res.status(400).send("Order id is missing");

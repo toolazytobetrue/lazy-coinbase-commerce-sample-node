@@ -20,7 +20,7 @@ const serviceminigame_model_1 = require("../../models/sales/serviceminigame.mode
 const OrderStatus_enum_1 = require("../../models/enums/OrderStatus.enum");
 const secrets_1 = require("../../util/secrets");
 const app_1 = require("../../app");
-function transactionCreateServicesOrder(currency, paymentGateway, services = [], powerleveling = [], userId, coupon, ipAddress) {
+function transactionCreateServicesOrder(currency, paymentGateway, services = [], powerleveling = [], accounts, userId, coupon, ipAddress) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!userId && paymentGateway.requiresLogin) {
@@ -51,6 +51,12 @@ function transactionCreateServicesOrder(currency, paymentGateway, services = [],
             serviceMinigamesDocs.forEach(powerLvling => {
                 sum += powerLvling.service.price;
             });
+            accounts.forEach(account => {
+                sum += account.price;
+                account.allowedAddons.forEach(allowedAddon => {
+                    sum += allowedAddon.price;
+                });
+            });
             if (secrets_1.MIN_SERVICES_ORDER && +mathjs_1.round(sum, 2) < +secrets_1.MIN_SERVICES_ORDER) {
                 throw new Error(`Minimum services order is ${secrets_1.MIN_SERVICES_ORDER} USD`);
             }
@@ -80,11 +86,12 @@ function transactionCreateServicesOrder(currency, paymentGateway, services = [],
                 user: userId,
                 ipAddress,
                 powerleveling: powerlevelingDocs,
-                services: serviceMinigamesDocs
+                services: serviceMinigamesDocs,
+                accounts: accounts
             };
             switch (paymentGateway.name) {
                 case 'crypto':
-                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
+                    const coinbaseCharge = yield create_coinbase_invoice_1.createCoinbaseInvoice(currency, uuid, totalDiscountedCurrency, `${uuid}`, `Discount: ${coupon ? coupon.amount : 0}% - Accounts x ${accounts.length} / Services x ${services.length} / Powerleveling x ${powerleveling.length}`);
                     _order.payment = {
                         coinbase: {
                             code: coinbaseCharge.code,

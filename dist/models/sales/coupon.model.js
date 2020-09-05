@@ -8,9 +8,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const CouponSchema = new mongoose_1.default.Schema({
     code: { type: String, required: true },
     amount: { type: Number, required: true },
-    gold: { type: Boolean, required: true },
-    services: { type: Boolean, required: true },
-    accounts: { type: Boolean, required: true },
     enabled: { type: Boolean, required: true },
     dateCreated: { type: Date, required: true },
     lastUpdated: Date,
