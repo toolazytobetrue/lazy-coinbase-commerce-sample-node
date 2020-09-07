@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mollie/api-client": "^3.2.4",
     "@types/dotenv": "^6.1.1",
     "@types/errorhandler": "0.0.32",
     "@types/express-xml-bodyparser": "^0.3.1",

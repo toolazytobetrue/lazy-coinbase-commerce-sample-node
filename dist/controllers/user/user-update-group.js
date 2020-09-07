@@ -21,12 +21,15 @@ exports.updateUserGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         if (utils_1.isEmptyOrNull(req.body.groupId)) {
             return res.status(400).send('Group id is missing');
         }
-        if (+req.body.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.ADMIN && +req.body.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.MODERATOR && +req.body.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER) {
+        if (+req.body.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.WORKER && +req.body.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER) {
             return res.status(400).send('Group id not found');
         }
         const user = yield user_model_1.User.findById(req.params.userId);
         if (!user) {
             return res.status(404).send("User not found");
+        }
+        if (user.groupId === UserPermissions_enum_1.USER_PERMISSIONS.ADMIN) {
+            return res.status(400).send("Ask UKF to revoke root access");
         }
         user.groupId = req.body.groupId;
         yield user.save();

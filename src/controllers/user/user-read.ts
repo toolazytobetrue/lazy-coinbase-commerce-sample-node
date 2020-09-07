@@ -50,4 +50,4 @@ export const readUsers = async (req: Request, res: Response, next: NextFunction)
         logDetails('error', `Error while fetching users: ${err}`);
         return res.status(500).send('Something wrong happened');
     }
-};
+}; 

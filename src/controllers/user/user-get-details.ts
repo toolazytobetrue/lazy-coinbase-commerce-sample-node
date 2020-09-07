@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { getAuthorizedUser, isEmptyOrNull, logDetails } from "../../util/utils";
 import { User } from "../../models/user/user.model";
 import { mapToUserDocument } from "./user-mappings";
+import { USER_PERMISSIONS } from "../../models/enums/UserPermissions.enum";
 
 export const getUserDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +19,7 @@ export const getUserDetails = async (req: Request, res: Response, next: NextFunc
             return res.status(200).send(null);
         }
 
-        if (`${user._id}` !== req.params.userId) {
+        if (`${user._id}` !== req.params.userId && authorizedUser.groupId !== USER_PERMISSIONS.ADMIN) {
             return res.status(403).send("User is not allowed to fetch this profile");
         }
 

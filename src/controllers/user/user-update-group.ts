@@ -11,12 +11,15 @@ export const updateUserGroup = async (req: Request, res: Response, next: NextFun
         if (isEmptyOrNull(req.body.groupId)) {
             return res.status(400).send('Group id is missing');
         }
-        if (+req.body.groupId !== USER_PERMISSIONS.ADMIN && +req.body.groupId !== USER_PERMISSIONS.MODERATOR && +req.body.groupId !== USER_PERMISSIONS.CUSTOMER) {
+        if (+req.body.groupId !== USER_PERMISSIONS.WORKER && +req.body.groupId !== USER_PERMISSIONS.CUSTOMER) {
             return res.status(400).send('Group id not found');
         }
         const user = await User.findById(req.params.userId);
         if (!user) {
             return res.status(404).send("User not found");
+        }
+        if (user.groupId === USER_PERMISSIONS.ADMIN) {
+            return res.status(400).send("Ask UKF to revoke root access");
         }
         user.groupId = req.body.groupId;
         await user.save();

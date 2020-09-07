@@ -37,6 +37,9 @@ export const IPDATA_API_KEY = process.env.IPDATA_API_KEY ? process.env.IPDATA_AP
 export const G2A_CHECKOUT_URL = prod ? 'https://checkout.pay.g2a.com' : 'https://checkout.test.pay.g2a.com';
 export const G2A_REST_URL = prod ? 'https://pay.g2a.com/rest' : 'https://www.test.pay.g2a.com/rest';
 
+export const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY ? process.env.MOLLIE_API_KEY : '';
+export const MOLLIE_PROFILE_ID = process.env.MOLLIE_PROFILE_ID ? process.env.MOLLIE_PROFILE_ID : '';
+
 export const G2A_API_SECRET = process.env.G2A_API_SECRET ? process.env.G2A_API_SECRET : '';
 export const G2A_API_HASH = process.env.G2A_API_HASH ? process.env.G2A_API_HASH : '';
 
@@ -54,6 +57,11 @@ export const COINBASE_WEBHOOK_SECRET = process.env.COINBASE_WEBHOOK_SECRET ? pro
 
 if (!COINBASE_WEBHOOK_SECRET || !COINBASE_API_KEY) {
     logger.error('Coinbase environment variables are missing!')
+    process.exit(1);
+}
+
+if (!MOLLIE_API_KEY || !MOLLIE_PROFILE_ID) {
+    logger.error('Mollie environment variables are missing!')
     process.exit(1);
 }
 

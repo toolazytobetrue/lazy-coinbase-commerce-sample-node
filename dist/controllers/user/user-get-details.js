@@ -13,6 +13,7 @@ exports.getUserDetails = void 0;
 const utils_1 = require("../../util/utils");
 const user_model_1 = require("../../models/user/user.model");
 const user_mappings_1 = require("./user-mappings");
+const UserPermissions_enum_1 = require("../../models/enums/UserPermissions.enum");
 exports.getUserDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
@@ -26,7 +27,7 @@ exports.getUserDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         if (!user) {
             return res.status(200).send(null);
         }
-        if (`${user._id}` !== req.params.userId) {
+        if (`${user._id}` !== req.params.userId && authorizedUser.groupId !== UserPermissions_enum_1.USER_PERMISSIONS.ADMIN) {
             return res.status(403).send("User is not allowed to fetch this profile");
         }
         return res.status(200).json(user_mappings_1.mapToUserDocument(user));

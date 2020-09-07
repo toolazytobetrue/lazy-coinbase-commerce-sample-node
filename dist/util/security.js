@@ -25,7 +25,7 @@ function isAuthorized(req, res, next) {
         if (!userCache) {
             return res.status(401).send('User is not authenticated, please login again');
         }
-        verifyDateInternal(token, [UserPermissions_enum_1.USER_PERMISSIONS.ADMIN, UserPermissions_enum_1.USER_PERMISSIONS.MODERATOR, UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER])
+        verifyDateInternal(token, [UserPermissions_enum_1.USER_PERMISSIONS.ADMIN, UserPermissions_enum_1.USER_PERMISSIONS.WORKER, UserPermissions_enum_1.USER_PERMISSIONS.CUSTOMER])
             .then(resolve => {
             return next();
         }).catch(err => {
@@ -68,7 +68,7 @@ function isAuthorizedBelowAdmin(req, res, next) {
         if (!userCache) {
             return res.status(401).send('User is not authenticated, please login again');
         }
-        verifyDateInternal(token, [UserPermissions_enum_1.USER_PERMISSIONS.ADMIN, UserPermissions_enum_1.USER_PERMISSIONS.MODERATOR]).then(resolve => {
+        verifyDateInternal(token, [UserPermissions_enum_1.USER_PERMISSIONS.ADMIN, UserPermissions_enum_1.USER_PERMISSIONS.WORKER]).then(resolve => {
             return next();
         }).catch(err => {
             return res.status(401).send(err);

@@ -131,7 +131,7 @@ app.put('/api/user/:userId/group', security_1.isAuthorizedRootAdmin, userControl
 app.post('/api/order', orderController.createOrder);
 app.get('/api/order', security_1.isAuthorizedBelowAdmin, orderController.readOrders);
 app.get('/api/order/:orderId', orderController.readOrder);
-app.put('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderController.updateOrder);
+app.put('/api/order/:orderId', security_1.isAuthorizedBelowAdmin, orderController.updateOrder);
 app.delete('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderController.deleteOrder);
 /**
  * Entities Management
