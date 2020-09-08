@@ -16,6 +16,7 @@ import * as stockController from './controllers/stock/stock'
 import * as accountController from './controllers/account/account';
 import * as serviceController from './controllers/service/service';
 import * as skillController from './controllers/skill/skill';
+import * as announcementController from './controllers/announcement';
 import xmlparser from 'express-xml-bodyparser';
 import redis from 'redis';
 import { isAuthorizedRootAdmin, isAuthorized, isAuthorizedBelowAdmin } from './util/security';
@@ -125,6 +126,7 @@ app.delete('/api/order/:orderId', isAuthorizedRootAdmin, orderController.deleteO
 app.put('/api/stock', isAuthorizedRootAdmin, stockController.updateStock);
 app.put('/api/rate', isAuthorizedRootAdmin, stockController.updateSwapRate);
 app.put('/api/rental', isAuthorizedRootAdmin, stockController.updateStakerRental);
+app.put('/api/announcement', isAuthorizedRootAdmin, announcementController.updateAnnouncement);
 
 app.post('/api/account', isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/skill', isAuthorizedRootAdmin, skillController.createSkill);
@@ -161,6 +163,7 @@ app.delete('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.dele
  */
 app.get('/api/stock', stockController.readLatestStock);
 app.get('/api/rate', stockController.readSwapRate);
+app.get('/api/announcement', announcementController.readAnnouncement);
 app.get('/api/rental', stockController.readStakerRental);
 
 app.get('/api/paymentgateway', paymentGatewaysController.read);

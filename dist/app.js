@@ -50,6 +50,7 @@ const stockController = __importStar(require("./controllers/stock/stock"));
 const accountController = __importStar(require("./controllers/account/account"));
 const serviceController = __importStar(require("./controllers/service/service"));
 const skillController = __importStar(require("./controllers/skill/skill"));
+const announcementController = __importStar(require("./controllers/announcement"));
 const express_xml_bodyparser_1 = __importDefault(require("express-xml-bodyparser"));
 const redis_1 = __importDefault(require("redis"));
 const security_1 = require("./util/security");
@@ -139,6 +140,7 @@ app.delete('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderControl
 app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateStock);
 app.put('/api/rate', security_1.isAuthorizedRootAdmin, stockController.updateSwapRate);
 app.put('/api/rental', security_1.isAuthorizedRootAdmin, stockController.updateStakerRental);
+app.put('/api/announcement', security_1.isAuthorizedRootAdmin, announcementController.updateAnnouncement);
 app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
 app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
 app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
@@ -165,6 +167,7 @@ app.delete('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponCont
  */
 app.get('/api/stock', stockController.readLatestStock);
 app.get('/api/rate', stockController.readSwapRate);
+app.get('/api/announcement', announcementController.readAnnouncement);
 app.get('/api/rental', stockController.readStakerRental);
 app.get('/api/paymentgateway', paymentGatewaysController.read);
 app.get('/api/service/powerleveling/table', serviceController.readXpTable);
