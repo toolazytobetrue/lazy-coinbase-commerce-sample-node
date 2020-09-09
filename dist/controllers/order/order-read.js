@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.readOrders = exports.readOrder = void 0;
 const utils_1 = require("../../util/utils");
 const order_model_1 = require("../../models/order/order.model");
-const gold_mappings_1 = require("../mappings/gold-mappings");
+const order_mapping_1 = require("../mappings/order-mapping");
 exports.readOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (utils_1.isEmptyOrNull(req.params.orderId)) {
@@ -26,7 +26,7 @@ exports.readOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (!order) {
             return res.status(404).send("Order not found");
         }
-        return res.status(200).json(gold_mappings_1.mapToOrderDocument(order));
+        return res.status(200).json(order_mapping_1.mapToOrderDocument(order));
     }
     catch (err) {
         utils_1.logDetails('error', `Error reading orders: ${err}`);
@@ -47,7 +47,7 @@ exports.readOrders = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         .skip(pageNumber > 0 ? ((pageNumber - 1) * numberPerPage) : 0)
         .limit(numberPerPage)
         .populate('user');
-    const orders = _orders.map(order => gold_mappings_1.mapToOrderDocument(order));
+    const orders = _orders.map(order => order_mapping_1.mapToOrderDocument(order));
     return res.status(200).json({
         pageNumber,
         numberPerPage,

@@ -22,13 +22,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.decodeToken = exports.verifyData = exports.signData = exports.pubKey = exports.privateKey = void 0;
 const fs = __importStar(require("fs"));
 const jwt = __importStar(require("jsonwebtoken"));
-exports.privateKey = fs.readFileSync('monkeysgold.key');
-exports.pubKey = fs.readFileSync('monkeysgold.key.pub');
+exports.privateKey = fs.readFileSync('lazyservices.key');
+exports.pubKey = fs.readFileSync('lazyservices.key.pub');
 const verifyOptions = {
     algorithm: 'RS256',
-    audience: 'monkeysgold',
+    audience: 'lazyservices',
     expiresIn: '12h',
-    issuer: 'monkeysgoldserver',
+    issuer: 'lazyservices-server',
     subject: 'credentials',
 };
 function signData(data, cb) {

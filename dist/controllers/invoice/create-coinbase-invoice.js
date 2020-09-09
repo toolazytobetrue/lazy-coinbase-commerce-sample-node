@@ -12,14 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCoinbaseInvoice = void 0;
 const utils_1 = require("../../util/utils");
 const app_1 = require("../../app");
-exports.createCoinbaseInvoice = (currency, orderId, totalAmount, name, description) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createCoinbaseInvoice = (orderId, totalAmount, name, description) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let chargeData = {
             'name': name,
             'description': description,
             'local_price': {
                 'amount': `${+totalAmount}`,
-                'currency': currency
+                'currency': 'USD'
             },
             'pricing_type': 'fixed_price',
             'redirect_url': utils_1.getOrderUrl(orderId)

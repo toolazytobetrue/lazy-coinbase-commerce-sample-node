@@ -30,43 +30,19 @@ export const URL_ON_SUCCESS = process.env.URL_ON_SUCCESS ? process.env.URL_ON_SU
 
 
 export const MERCHANT_EMAIL = process.env.MERCHANT_EMAIL ? process.env.MERCHANT_EMAIL : '';
-export const CURRENCY_LAYER_API = process.env.CURRENCY_LAYER_API ? process.env.CURRENCY_LAYER_API : '';
-export const NUMVERIFY_API_KEY = process.env.NUMVERIFY_API_KEY ? process.env.NUMVERIFY_API_KEY : '';
-export const IPDATA_API_KEY = process.env.IPDATA_API_KEY ? process.env.IPDATA_API_KEY : '';
-
-export const G2A_CHECKOUT_URL = prod ? 'https://checkout.pay.g2a.com' : 'https://checkout.test.pay.g2a.com';
-export const G2A_REST_URL = prod ? 'https://pay.g2a.com/rest' : 'https://www.test.pay.g2a.com/rest';
-
-export const MOLLIE_API_KEY = process.env.MOLLIE_API_KEY ? process.env.MOLLIE_API_KEY : '';
-export const MOLLIE_PROFILE_ID = process.env.MOLLIE_PROFILE_ID ? process.env.MOLLIE_PROFILE_ID : '';
-
-export const G2A_API_SECRET = process.env.G2A_API_SECRET ? process.env.G2A_API_SECRET : '';
-export const G2A_API_HASH = process.env.G2A_API_HASH ? process.env.G2A_API_HASH : '';
-
-export const MIN_GOLD_ORDER = process.env.MIN_GOLD_ORDER ? process.env.MIN_GOLD_ORDER : 0;
-export const MIN_SERVICES_ORDER = process.env.MIN_SERVICES_ORDER ? process.env.MIN_SERVICES_ORDER : 0;
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD : '';
+
+export const COINBASE_API_KEY = process.env.COINBASE_API_KEY ? process.env.COINBASE_API_KEY : '';
+export const COINBASE_WEBHOOK_SECRET = process.env.COINBASE_WEBHOOK_SECRET ? process.env.COINBASE_WEBHOOK_SECRET : '';
 
 if (!URL_ON_FAIL || !URL_ON_SUCCESS) {
     logger.error('URL on fail/on success are missing')
     process.exit(1);
 }
 
-export const COINBASE_API_KEY = process.env.COINBASE_API_KEY ? process.env.COINBASE_API_KEY : '';
-export const COINBASE_WEBHOOK_SECRET = process.env.COINBASE_WEBHOOK_SECRET ? process.env.COINBASE_WEBHOOK_SECRET : '';
 
 if (!COINBASE_WEBHOOK_SECRET || !COINBASE_API_KEY) {
     logger.error('Coinbase environment variables are missing!')
-    process.exit(1);
-}
-
-if (!MOLLIE_API_KEY || !MOLLIE_PROFILE_ID) {
-    logger.error('Mollie environment variables are missing!')
-    process.exit(1);
-}
-
-if (!MIN_GOLD_ORDER || !MIN_SERVICES_ORDER) {
-    logger.error('Min gold/services order amount missing!')
     process.exit(1);
 }
 

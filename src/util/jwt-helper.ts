@@ -1,13 +1,13 @@
 
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
-export const privateKey = fs.readFileSync('monkeysgold.key');
-export const pubKey = fs.readFileSync('monkeysgold.key.pub');
+export const privateKey = fs.readFileSync('lazyservices.key');
+export const pubKey = fs.readFileSync('lazyservices.key.pub');
 const verifyOptions: jwt.SignOptions = {
     algorithm: 'RS256',
-    audience: 'monkeysgold',
+    audience: 'lazyservices',
     expiresIn: '12h',
-    issuer: 'monkeysgoldserver',
+    issuer: 'lazyservices-server',
     subject: 'credentials',
 };
 

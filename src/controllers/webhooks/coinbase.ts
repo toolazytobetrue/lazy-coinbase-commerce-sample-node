@@ -2,10 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { logDetails } from '../../util/utils';
 import { Webhook } from '../../app';
 import { COINBASE_WEBHOOK_SECRET } from '../../util/secrets';
-import { User } from '../../models/user/user.model';
 import { Order } from '../../models/order/order.model';
-import { Stock } from '../../models/sales/stock.model';
-import { Account } from '../../models/sales/account.model';
 import { PaymentGateway } from '../../models/entities/payment-gateway.model';
 export const webhookCoinbase = async (req: Request, res: any, next: NextFunction) => {
     try {
@@ -39,31 +36,19 @@ export const webhookCoinbase = async (req: Request, res: any, next: NextFunction
                     });
                 }
                 if (lastTimeline.status === 'CONFIRMED') {
-                    if (order.gold) {
-                        const crypto = await PaymentGateway.findOne({ name: 'crypto' });
-                        if (crypto) {
-                            const lastStock = await Stock.findOne({ paymentgateway: crypto._id });
-                            if (lastStock) {
-                                if (order.gold.server === 1) {
-                                    lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
-                                } else {
-                                    lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
-                                }
-                            }
-                        }
-                    }
-
-                    // if (order.account) {
-                    //     const account = order.account;
-                    //     const accounts = await Account.find({ sold: false });
-                    //     const found = accounts.find(_ => `${_._id}` === `${account._id}`);
-                    //     if (found) {
-                    //         found.sold = true;
-                    //         order.account.sold = true;
-                    //         await found.save();
-                    //         await order.account.save();
+                    // if (order.gold) {
+                    //     const crypto = await PaymentGateway.findOne({ name: 'crypto' });
+                    //     if (crypto) {
+                    //         const lastStock = await Stock.findOne({ paymentgateway: crypto._id });
+                    //         if (lastStock) {
+                    //             if (order.gold.server === 1) {
+                    //                 lastStock.osrs.units = lastStock.osrs.units - order.gold.units > 0 ? lastStock.osrs.units - order.gold.units : 0;
+                    //             } else {
+                    //                 lastStock.rs3.units = lastStock.rs3.units - order.gold.units > 0 ? lastStock.rs3.units - order.gold.units : 0;
+                    //             }
+                    //         }
                     //     }
-                    // }
+                    // } 
                 }
                 await order.save();
                 logDetails('debug', `[COINBASE][UPDATE] Deposit: ${transaction.event.data.id} - ${lastTimeline.status}`);

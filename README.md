@@ -5,8 +5,8 @@ sudo /etc/init.d/nginx stop
 sudo /etc/init.d/nginx restart
 
 mongo
-use monkeysgold
-db.createUser( { user: "monkeysgold", pwd: "aC9sQ3415bPnq4sjz93QEBTR3EFVEb3G", roles: [ "dbOwner" ] } )
+use lazyservices
+db.createUser( { user: "lazyservices", pwd: "aC9sQ3415bPnq4sjz93QEBTR3EFVEb3G", roles: [ "dbOwner" ] } )
 show dbs
 show collections
 db.dropDatabase()

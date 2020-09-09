@@ -31,7 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.safeGetCurrencies = exports.Webhook = exports.Client = exports.Charge = exports.REDIS_CLIENT = exports.RATES_MINIFIED = void 0;
+exports.Webhook = exports.Client = exports.Charge = exports.REDIS_CLIENT = void 0;
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -42,23 +42,11 @@ const secrets_1 = require("./util/secrets");
 const utils_1 = require("./util/utils");
 const coinbase = __importStar(require("coinbase-commerce-node"));
 const webhookCoinbase = __importStar(require("./controllers/webhooks/coinbase"));
-const webhookG2A = __importStar(require("./controllers/webhooks/g2a"));
-const couponController = __importStar(require("./controllers/coupon/coupon"));
-const paymentGatewaysController = __importStar(require("./controllers/payment-gateway/payment-gateway"));
 const orderController = __importStar(require("./controllers/order/order"));
-const stockController = __importStar(require("./controllers/stock/stock"));
-const accountController = __importStar(require("./controllers/account/account"));
-const serviceController = __importStar(require("./controllers/service/service"));
-const skillController = __importStar(require("./controllers/skill/skill"));
-const announcementController = __importStar(require("./controllers/announcement"));
 const express_xml_bodyparser_1 = __importDefault(require("express-xml-bodyparser"));
 const redis_1 = __importDefault(require("redis"));
 const security_1 = require("./util/security");
 const redis_users_1 = require("./api/redis-users");
-const currency_converter_1 = require("./api/currency-converter");
-const currenciesController = __importStar(require("./controllers/currencies"));
-exports.RATES_MINIFIED = {};
-const accountAddonController = __importStar(require("./controllers/account-addon/account-addon"));
 const redisOptions = {
 // password: REDIS_PASSWORD
 };
@@ -79,33 +67,12 @@ mongoose_1.default.connect(mongoUrl, {
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Successfully connected to mongodb');
     redis_users_1.setUserArray(exports.REDIS_CLIENT, '[]');
-    yield exports.safeGetCurrencies();
 }))
     .catch((err) => {
     console.log(err);
     utils_1.logDetails('error', 'MongoDB connection error. Please make sure MongoDB is running. ' + err);
     process.exit(1);
 });
-exports.safeGetCurrencies = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield currency_converter_1.getCurrencies();
-        const body = JSON.parse(response);
-        exports.RATES_MINIFIED = {
-            USD: 1,
-            GBP: body['quotes']['USDGBP'],
-            EUR: body['quotes']['USDEUR'],
-            CAD: body['quotes']['USDCAD'],
-            CNY: body['quotes']['USDCNY'],
-            NZD: body['quotes']['USDNZD']
-        };
-    }
-    catch (err) {
-        utils_1.logDetails('error', 'Failed to load currencies' + err);
-    }
-});
-setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield exports.safeGetCurrencies();
-}), 60 * 60 * 1000 * 6);
 app.set('port', process.env.PORT || 3000);
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -135,54 +102,8 @@ app.get('/api/order/:orderId', orderController.readOrder);
 app.put('/api/order/:orderId', security_1.isAuthorizedBelowAdmin, orderController.updateOrder);
 app.delete('/api/order/:orderId', security_1.isAuthorizedRootAdmin, orderController.deleteOrder);
 /**
- * Entities Management
- */
-app.put('/api/stock', security_1.isAuthorizedRootAdmin, stockController.updateStock);
-app.put('/api/rate', security_1.isAuthorizedRootAdmin, stockController.updateSwapRate);
-app.put('/api/rental', security_1.isAuthorizedRootAdmin, stockController.updateStakerRental);
-app.put('/api/announcement', security_1.isAuthorizedRootAdmin, announcementController.updateAnnouncement);
-app.post('/api/account', security_1.isAuthorizedRootAdmin, accountController.createAccount);
-app.post('/api/skill', security_1.isAuthorizedRootAdmin, skillController.createSkill);
-app.post('/api/service', security_1.isAuthorizedRootAdmin, serviceController.createService);
-app.get('/api/account', security_1.isAuthorizedRootAdmin, accountController.readAccounts);
-app.get('/api/account/available', accountController.readAvailableAccounts);
-app.get('/api/service', serviceController.readServices);
-app.get('/api/skill', skillController.readSkills);
-app.put('/api/account/:accountId', security_1.isAuthorizedRootAdmin, accountController.updateAccount);
-app.put('/api/service/:serviceId', security_1.isAuthorizedRootAdmin, serviceController.updateService);
-app.put('/api/skill/:skillId', security_1.isAuthorizedRootAdmin, skillController.updateSkill);
-app.delete('/api/account/:accountId', security_1.isAuthorizedRootAdmin, accountController.deleteAccount);
-app.delete('/api/service/:serviceId', security_1.isAuthorizedRootAdmin, serviceController.deleteService);
-app.delete('/api/skill/:skillId', security_1.isAuthorizedRootAdmin, skillController.deleteSkill);
-/**
- * Coupon API endpoints
- */
-app.post('/api/coupon', security_1.isAuthorizedRootAdmin, couponController.createCoupon);
-app.post('/api/coupon/apply', couponController.applyCoupon);
-app.get('/api/coupon', security_1.isAuthorizedRootAdmin, couponController.readCoupons);
-app.put('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponController.updateCoupon);
-app.delete('/api/coupon/:couponId', security_1.isAuthorizedRootAdmin, couponController.deleteCoupon);
-/**
- * Public API endpoints
- */
-app.get('/api/stock', stockController.readLatestStock);
-app.get('/api/rate', stockController.readSwapRate);
-app.get('/api/announcement', announcementController.readAnnouncement);
-app.get('/api/rental', stockController.readStakerRental);
-app.get('/api/paymentgateway', paymentGatewaysController.read);
-app.get('/api/service/powerleveling/table', serviceController.readXpTable);
-app.get('/api/currencies', currenciesController.readCurrencies);
-/**
  * Payment Webhooks API endpoints
  */
 app.post('/api/webhooks/coinbase', webhookCoinbase.webhookCoinbase);
-app.post('/api/webhooks/g2a', webhookG2A.webhookG2A);
-/**
- * Account Addon API endpoins
- */
-app.post('/api/accountaddon', security_1.isAuthorizedRootAdmin, accountAddonController.createAccountAddon);
-app.get('/api/accountaddon', accountAddonController.readAccountAddons);
-app.put('/api/accountaddon/:accountAddonId', security_1.isAuthorizedRootAdmin, accountAddonController.updateAccountAddon);
-app.delete('/api/accountaddon/:accountAddonId', security_1.isAuthorizedRootAdmin, accountAddonController.deleteAccountAddon);
 exports.default = app;
 //# sourceMappingURL=app.js.map

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { isEmptyOrNull, logDetails, getAuthorizedUser } from '../../util/utils';
 import { Order } from '../../models/order/order.model';
-import { mapToOrderDocument } from '../mappings/gold-mappings';
+import { mapToOrderDocument } from '../mappings/order-mapping';
 
 export const readOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {

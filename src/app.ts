@@ -8,23 +8,11 @@ import { COINBASE_API_KEY, prod, REDIS_PASSWORD, MONGODB_URI } from './util/secr
 import { logDetails } from './util/utils';
 import * as coinbase from 'coinbase-commerce-node';
 import * as webhookCoinbase from './controllers/webhooks/coinbase';
-import * as webhookG2A from './controllers/webhooks/g2a';
-import * as couponController from './controllers/coupon/coupon';
-import * as paymentGatewaysController from './controllers/payment-gateway/payment-gateway';
 import * as orderController from './controllers/order/order';
-import * as stockController from './controllers/stock/stock'
-import * as accountController from './controllers/account/account';
-import * as serviceController from './controllers/service/service';
-import * as skillController from './controllers/skill/skill';
-import * as announcementController from './controllers/announcement';
 import xmlparser from 'express-xml-bodyparser';
 import redis from 'redis';
 import { isAuthorizedRootAdmin, isAuthorized, isAuthorizedBelowAdmin } from './util/security';
 import { setUserArray } from './api/redis-users';
-import { getCurrencies } from './api/currency-converter';
-import * as currenciesController from './controllers/currencies';
-export let RATES_MINIFIED: any = {}
-import * as accountAddonController from './controllers/account-addon/account-addon';
 
 const redisOptions = {
     // password: REDIS_PASSWORD
@@ -49,37 +37,12 @@ mongoose.connect(mongoUrl, {
     .then(async () => {
         console.log('Successfully connected to mongodb');
         setUserArray(REDIS_CLIENT, '[]');
-        await safeGetCurrencies();
     })
     .catch((err: string) => {
         console.log(err)
         logDetails('error', 'MongoDB connection error. Please make sure MongoDB is running. ' + err);
         process.exit(1);
     });
-
-
-
-export const safeGetCurrencies = async () => {
-    try {
-        const response = await getCurrencies();
-        const body = JSON.parse(response);
-        RATES_MINIFIED = {
-            USD: 1,
-            GBP: body['quotes']['USDGBP'],
-            EUR: body['quotes']['USDEUR'],
-            CAD: body['quotes']['USDCAD'],
-            CNY: body['quotes']['USDCNY'],
-            NZD: body['quotes']['USDNZD']
-        }
-
-    } catch (err) {
-        logDetails('error', 'Failed to load currencies' + err);
-    }
-};
-
-setInterval(async () => {
-    await safeGetCurrencies();
-}, 60 * 60 * 1000 * 6);
 
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
@@ -119,72 +82,12 @@ app.get('/api/order/:orderId', orderController.readOrder);
 app.put('/api/order/:orderId', isAuthorizedBelowAdmin, orderController.updateOrder);
 app.delete('/api/order/:orderId', isAuthorizedRootAdmin, orderController.deleteOrder);
 
-/**
- * Entities Management
- */
-
-app.put('/api/stock', isAuthorizedRootAdmin, stockController.updateStock);
-app.put('/api/rate', isAuthorizedRootAdmin, stockController.updateSwapRate);
-app.put('/api/rental', isAuthorizedRootAdmin, stockController.updateStakerRental);
-app.put('/api/announcement', isAuthorizedRootAdmin, announcementController.updateAnnouncement);
-
-app.post('/api/account', isAuthorizedRootAdmin, accountController.createAccount);
-app.post('/api/skill', isAuthorizedRootAdmin, skillController.createSkill);
-app.post('/api/service', isAuthorizedRootAdmin, serviceController.createService);
-
-app.get('/api/account', isAuthorizedRootAdmin, accountController.readAccounts);
-app.get('/api/account/available', accountController.readAvailableAccounts);
-
-
-app.get('/api/service', serviceController.readServices);
-app.get('/api/skill', skillController.readSkills);
-
-app.put('/api/account/:accountId', isAuthorizedRootAdmin, accountController.updateAccount);
-app.put('/api/service/:serviceId', isAuthorizedRootAdmin, serviceController.updateService);
-app.put('/api/skill/:skillId', isAuthorizedRootAdmin, skillController.updateSkill);
-
-app.delete('/api/account/:accountId', isAuthorizedRootAdmin, accountController.deleteAccount);
-app.delete('/api/service/:serviceId', isAuthorizedRootAdmin, serviceController.deleteService);
-app.delete('/api/skill/:skillId', isAuthorizedRootAdmin, skillController.deleteSkill);
-
-/**
- * Coupon API endpoints
- */
-
-app.post('/api/coupon', isAuthorizedRootAdmin, couponController.createCoupon);
-app.post('/api/coupon/apply', couponController.applyCoupon);
-app.get('/api/coupon', isAuthorizedRootAdmin, couponController.readCoupons);
-app.put('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.updateCoupon);
-app.delete('/api/coupon/:couponId', isAuthorizedRootAdmin, couponController.deleteCoupon);
-
-
-/**
- * Public API endpoints
- */
-app.get('/api/stock', stockController.readLatestStock);
-app.get('/api/rate', stockController.readSwapRate);
-app.get('/api/announcement', announcementController.readAnnouncement);
-app.get('/api/rental', stockController.readStakerRental);
-
-app.get('/api/paymentgateway', paymentGatewaysController.read);
-app.get('/api/service/powerleveling/table', serviceController.readXpTable);
-app.get('/api/currencies', currenciesController.readCurrencies);
 
 /**
  * Payment Webhooks API endpoints
  */
 
 app.post('/api/webhooks/coinbase', webhookCoinbase.webhookCoinbase);
-app.post('/api/webhooks/g2a', webhookG2A.webhookG2A);
-
-/**
- * Account Addon API endpoins
- */
-
-app.post('/api/accountaddon', isAuthorizedRootAdmin, accountAddonController.createAccountAddon);
-app.get('/api/accountaddon', accountAddonController.readAccountAddons);
-app.put('/api/accountaddon/:accountAddonId', isAuthorizedRootAdmin, accountAddonController.updateAccountAddon);
-app.delete('/api/accountaddon/:accountAddonId', isAuthorizedRootAdmin, accountAddonController.deleteAccountAddon);
 
 
 export default app;
