@@ -1,13 +1,20 @@
-```
-sudo apt-get install nginx
-sudo /etc/init.d/nginx start
-sudo /etc/init.d/nginx stop
-sudo /etc/init.d/nginx restart
+# Sample - Create an order with Coinbase Commerce payment gateway
+The following project is just a boilerplater/sample on how to create an order and use Coinbase Commerce as a payment gateway.
 
-mongo
-use lazyservices
-db.createUser( { user: "lazyservices", pwd: "aC9sQ3415bPnq4sjz93QEBTR3EFVEb3G", roles: [ "dbOwner" ] } )
-show dbs
-show collections
-db.dropDatabase()
-````
+## Environment varilables  .env
+```
+NODE_ENV=production
+URL_MAIN=https://555ab16644b7.ngrok.io
+URL_ON_SUCCESS=https://555ab16644b7.ngrok.io  
+
+COINBASE_API_KEY=''
+COINBASE_WEBHOOK_SECRET='' 
+```
+
+## Instructions
+ 
+```
+$ npm install
+$ tsc -w
+$ node dist/server
+```

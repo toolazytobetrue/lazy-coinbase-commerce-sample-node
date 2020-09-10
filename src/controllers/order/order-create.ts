@@ -1,20 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import { isEmptyOrNull, logDetails, getAuthorizedUser, checkRSN, currencies, deepClone } from '../../util/utils';
-
+import { logDetails, isEmptyOrNull } from '../../util/utils';
+import { transactionCreateOrder } from '../../api/order/create_order';
+import { round } from 'mathjs';
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const ObjectId = require("mongodb").ObjectID;
-        const userIpAddress: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        let userId = null;
-        const authorizedUser: any = getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
+        if (isEmptyOrNull(req.body.amount)) {
+            return res.status(400).send("Amount is missing");
         }
-        userId = authorizedUser.id;
-        // const genericTransaction = await transactionCreateOrder(req.body.currency, paymentGateway, services, powerleveling, accountsOrdered, userId, coupon, userIpAddress);
-        // return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
+        if (isNaN(req.body.amount)) {
+            return res.status(400).send("Amount is not a number");
+        }
+        if (req.body.amount <= 0) {
+            return res.status(400).send("Amount cannot be zero or negative");
+        }
+        const finalAmount = +round(req.body.amount, 2);
+        const transaction = await transactionCreateOrder(finalAmount);
+        return res.status(200).json({ redirect_url: transaction.redirect_url });
     } catch (err) {
-        logDetails('error', `Error create order: ${err}`);
+        logDetails('error', `Failed to create order: ${err}`);
         return res.status(500).send('Failed to create order');
     }
 }

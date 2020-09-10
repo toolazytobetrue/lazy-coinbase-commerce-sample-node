@@ -11,21 +11,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createOrder = void 0;
 const utils_1 = require("../../util/utils");
+const create_order_1 = require("../../api/order/create_order");
+const mathjs_1 = require("mathjs");
 exports.createOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ObjectId = require("mongodb").ObjectID;
-        const userIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
-        let userId = null;
-        const authorizedUser = utils_1.getAuthorizedUser(req, res, next);
-        if (authorizedUser === null) {
-            return res.status(401).send("Unauthorized access");
+        if (utils_1.isEmptyOrNull(req.body.amount)) {
+            return res.status(400).send("Amount is missing");
         }
-        userId = authorizedUser.id;
-        // const genericTransaction = await transactionCreateOrder(req.body.currency, paymentGateway, services, powerleveling, accountsOrdered, userId, coupon, userIpAddress);
-        // return res.status(200).json({ redirect_url: genericTransaction.redirect_url });
+        if (isNaN(req.body.amount)) {
+            return res.status(400).send("Amount is not a number");
+        }
+        if (req.body.amount <= 0) {
+            return res.status(400).send("Amount cannot be zero or negative");
+        }
+        const finalAmount = +mathjs_1.round(req.body.amount, 2);
+        const transaction = yield create_order_1.transactionCreateOrder(finalAmount);
+        return res.status(200).json({ redirect_url: transaction.redirect_url });
     }
     catch (err) {
-        utils_1.logDetails('error', `Error create order: ${err}`);
+        utils_1.logDetails('error', `Failed to create order: ${err}`);
         return res.status(500).send('Failed to create order');
     }
 });
