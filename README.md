@@ -29,3 +29,10 @@ $ node dist/server
     "amount": 100.00
 }
 ```
+
+## Response
+```
+{
+    "redirect_url": "https://commerce.coinbase.com/charges/KH9VT2H4"
+}
+```
