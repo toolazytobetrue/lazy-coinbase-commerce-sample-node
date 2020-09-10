@@ -1,9 +1,9 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction } from 'express';
- import * as index from './controllers/index';
+import * as index from './controllers/index';
 import { COINBASE_API_KEY } from './util/secrets';
- import * as coinbase from 'coinbase-commerce-node';
+import * as coinbase from 'coinbase-commerce-node';
 import * as webhookCoinbase from './controllers/webhooks/coinbase';
 import * as orderController from './controllers/order/order';
 

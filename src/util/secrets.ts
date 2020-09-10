@@ -25,7 +25,7 @@ export const COINBASE_WEBHOOK_SECRET = process.env.COINBASE_WEBHOOK_SECRET ? pro
 if (!URL_ON_SUCCESS) {
     logger.error('URL on fail/on success are missing')
     process.exit(1);
-} 
+}
 
 if (!COINBASE_WEBHOOK_SECRET || !COINBASE_API_KEY) {
     logger.error('Coinbase environment variables are missing!')
