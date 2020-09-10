@@ -18,3 +18,14 @@ $ npm install
 $ tsc -w
 $ node dist/server
 ```
+
+## Method
+ 
+* Endpoint: https://555ab16644b7.ngrok.io/api/end
+* Method: POST
+* Body (JSON)
+```
+{
+    "amount": 100.00
+}
+```
